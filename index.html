@@ -839,26 +839,34 @@
       </div>
 
       <div style="background:var(--dark2); border:1px solid var(--border); border-radius:24px; padding:2.5rem; position:relative;">
-        <form id="contactForm" style="display:flex; flex-direction:column; gap:1.25rem;">
+        <form id="contactForm" action="https://32501e58.sibforms.com/serve/MUIFAN9anqvoLTvwZIXwoXavjTXL_amA5_KTry3iWrfp2tHNFsL0jXxNOAzoq2BhOBW3Z3qFBBFz8Tce7MTIA4BQnQRPk4tTqq6KS-Yyd-dQVbD5PN7D3rVrqtr7Tr5mj3OSlzlKd7xD-YoNe_nf7V91m4JUO_7xxTPlzqdWCjHIXJL1QSnwbhlgz06F7msZ5b-hKRqLxpDQyEVYpw==" method="POST" style="display:flex; flex-direction:column; gap:1.25rem;">
+          <!-- Brevo Hidden Fields -->
+          <input type="hidden" name="sib_form_action" value="subscribe">
+          <input type="hidden" name="sib_form_id" value="1">
+          <input type="hidden" name="sib_form_container_id" value="sib-form-container">
+          <input type="hidden" name="locale" value="pt">
+          <input type="hidden" name="SMS__COUNTRY_CODE" value="BR">
+          <input type="hidden" name="email_address_check" value="">
+
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div style="display:flex; flex-direction:column; gap:0.5rem;">
               <label style="font-size:0.85rem; color:var(--muted);">Nome completo</label>
-              <input type="text" name="name" required placeholder="Ex: João Silva" style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; transition:border-color 0.2s;">
+              <input type="text" name="NOME" required placeholder="Ex: João Silva" style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; transition:border-color 0.2s;">
             </div>
             <div style="display:flex; flex-direction:column; gap:0.5rem;">
               <label style="font-size:0.85rem; color:var(--muted);">E-mail corporativo</label>
-              <input type="email" name="email" required placeholder="joao@empresa.com" style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; transition:border-color 0.2s;">
+              <input type="email" name="EMAIL" required placeholder="joao@empresa.com" style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; transition:border-color 0.2s;">
             </div>
           </div>
 
           <div style="display:flex; flex-direction:column; gap:0.5rem;">
             <label style="font-size:0.85rem; color:var(--muted);">WhatsApp / Celular</label>
-            <input type="tel" name="phone" required placeholder="(00) 00000-0000" style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; transition:border-color 0.2s;">
+            <input type="tel" name="SMS" required placeholder="(00) 00000-0000" style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; transition:border-color 0.2s;">
           </div>
           
           <div style="display:flex; flex-direction:column; gap:0.5rem;">
             <label style="font-size:0.85rem; color:var(--muted);">Segmento do seu negócio</label>
-            <select name="segment" required style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; cursor:pointer;">
+            <select name="SEGMENTO" style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; cursor:pointer;">
               <option value="" disabled selected>Selecione uma opção</option>
               <option value="advocacia">Escritório de Advocacia</option>
               <option value="contabilidade">Contabilidade</option>
@@ -870,7 +878,7 @@
 
           <div style="display:flex; flex-direction:column; gap:0.5rem;">
             <label style="font-size:0.85rem; color:var(--muted);">Como podemos ajudar?</label>
-            <textarea name="message" rows="4" placeholder="Conte brevemente sobre o sistema que você precisa..." style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; resize:none; transition:border-color 0.2s;"></textarea>
+            <textarea name="MENSAGEM" rows="4" placeholder="Conte brevemente sobre o sistema que você precisa..." style="background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:0.8rem; color:#fff; outline:none; resize:none; transition:border-color 0.2s;"></textarea>
           </div>
 
           <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:1.1rem; border:none; cursor:pointer; font-family:'Syne',sans-serif; margin-top:0.5rem;">
@@ -925,21 +933,11 @@
 <script>
   // Script para lidar com o envio do formulário
   document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+    // Deixamos o comportamento padrão do formulário para o redirecionamento da Brevo funcionar
+    // Mas podemos adicionar um feedback visual antes de sair da página
     const btn = this.querySelector('button');
-    const originalText = btn.innerHTML;
-    
-    // Feedback visual de carregamento
     btn.innerHTML = 'Enviando...';
     btn.style.opacity = '0.7';
-    btn.disabled = true;
-
-    // Aqui integraremos com a Brevo
-    // Por enquanto, simulamos o sucesso
-    setTimeout(() => {
-      this.style.display = 'none';
-      document.getElementById('formStatus').style.display = 'block';
-    }, 1500);
   });
 
 function toggleMenu(){
