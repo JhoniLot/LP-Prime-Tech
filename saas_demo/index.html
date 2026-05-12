@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Estética — Gestão Clínica Especializada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #0F172A;
+            --primary-dark: #020617;
+            --primary-light: #D4AF37;
+            --accent: #D4AF37;
+            --bg: #FAFAFA;
+            --surface: #FFFFFF;
+            --sidebar-bg: #FFFFFF;
+            --text: #2D2D2D;
+            --text-light: #7A7A7A;
+            --border: #EEEEEE;
+            --success: #43A047;
+            --danger: #D32F2F;
+            --warning: #FFA000;
+            --pastel-blue: #E3F2FD;
+            --pastel-pink: #FCE4EC;
+            --pastel-green: #E8F5E9;
+            --pastel-orange: #FFF3E0;
+            --radius: 16px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.03);
+            --transition: all 0.3s ease;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            letter-spacing: -0.01em;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        /* Layout */
+        #app {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 70px;
+            background: var(--sidebar-bg);
+            color: var(--primary);
+            padding: 0 20px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Sidebar Luxury */
+        aside {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 24px;
+            transition: var(--transition);
+            z-index: 2000;
+            height: 100vh;
+        }
+
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1500;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 26px;
+            margin-bottom: 50px;
+            letter-spacing: 0.5px;
+            text-transform: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3);
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: #666666;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+            background: #F9F9F9;
+        }
+
+        .nav-item.active {
+            background: rgba(201, 168, 76, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 48px;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        /* Topbar Clean */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #F5F5F5;
+            padding: 10px 16px;
+            border-radius: 12px;
+            width: 300px;
+            gap: 10px;
+            color: var(--text-light);
+        }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .qa-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            color: var(--text);
+            text-align: left;
+        }
+        .qa-btn:hover { transform: translateY(-3px); }
+        .qa-icon {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            background: white;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        /* Components Luxury */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: none;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: var(--transition);
+        }
+        .card:hover { transform: translateY(-4px); }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; 
+            box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3);
+        }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4); }
+        
+        .btn-outline { 
+            background: transparent; 
+            border: 2px solid var(--primary); 
+            color: var(--primary); 
+        }
+        .btn-outline:hover { background: rgba(201, 168, 76, 0.05); }
+
+        .btn-ghost { background: transparent; color: var(--text-light); }
+        .btn-ghost:hover { background: rgba(0,0,0,0.05); }
+
+        /* Stats Luxury */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .stat-label { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .stat-icon { color: var(--primary); margin-bottom: 12px; width: 24px; height: 24px; }
+
+        /* Data Items Luxury */
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #F0E6D2, #E5D5A4);
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            margin-right: 18px;
+            border: 1px solid rgba(201, 168, 76, 0.2);
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pending { background: #FFF9C4; color: #827717; }
+        .badge-confirmed { background: #E3F2FD; color: #1565C0; }
+        .badge-done { background: #E8F5E9; color: #2E7D32; }
+        .badge-cancelled { background: #FFEBEE; color: #C62828; }
+
+        /* Agenda Grid Luxury */
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .time-col {
+            background: #FDFBF7;
+            border-right: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .time-slot {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .grid-row {
+            height: 70px;
+            border-bottom: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .appointment-block {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(201, 168, 76, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+        }
+
+        /* Table/List Styles */
+        .data-list { width: 100%; border-collapse: collapse; }
+        .data-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            transition: var(--transition);
+        }
+        .data-item:last-child { border-bottom: none; }
+        .data-item:hover { background: rgba(201, 168, 76, 0.02); }
+
+        .item-info { flex: 1; }
+        .item-title { font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 4px; }
+        .item-subtitle { color: var(--text-light); font-size: 14px; font-weight: 500; }
+
+        /* Modal Overlay Luxury */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal {
+            background: white;
+            width: 95%;
+            max-width: 550px;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal { transform: translateY(0); }
+
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: #FDFBF7;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.1); }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(212, 116, 138, 0.4);
+            cursor: pointer;
+            z-index: 50;
+            border: none;
+        }
+
+        /* Client View (Self-Registration) */
+        #client-view {
+            display: none;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .step-card {
+            max-width: 400px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .step-dot { width: 8px; height: 8px; border-radius: 4px; background: #EEE; }
+        .step-dot.active { width: 24px; background: var(--primary); }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            display: none;
+            z-index: 2000;
+        }
+
+        /* Responsive Global Fix */
+        @media (max-width: 992px) {
+            aside {
+                position: fixed;
+                left: -280px;
+                top: 0; bottom: 0;
+                height: 100vh;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            }
+            aside.active { left: 0; }
+            .mobile-header { display: flex; }
+            
+            main { padding: 90px 15px 30px 15px !important; width: 100vw; }
+            
+            /* Forçar coluna única em TUDO no mobile */
+            .stats-grid, 
+            .dashboard-content, 
+            .form-row, 
+            .choice-grid,
+            .config-grid,
+            .finance-grid { 
+                grid-template-columns: 1fr !important; 
+                gap: 15px !important; 
+            }
+
+            header { 
+                flex-direction: column !important; 
+                align-items: flex-start !important; 
+                gap: 15px !important; 
+                margin-bottom: 25px !important;
+            }
+            
+            header h1 { font-size: 24px !important; }
+            header .btn { width: 100% !important; justify-content: center !important; }
+
+            .card { padding: 15px !important; width: 100% !important; margin-bottom: 15px !important; }
+            
+            /* Ajuste da Agenda Diária no Mobile */
+            .calendar-container { padding: 10px !important; }
+            .appointment-block { font-size: 11px !important; padding: 5px !important; }
+            
+            /* Ajuste do Estoque */
+            .stock-item { flex-direction: column !important; gap: 15px !important; }
+            .stock-item .btn-group { width: 100% !important; }
+            .stock-item .btn { flex: 1 !important; }
+        }
+
+        /* Stock Progress Bar */
+        .stock-bar-bg { height: 8px; background: #EEE; border-radius: 4px; margin-top: 8px; overflow: hidden; }
+        .stock-bar-fill { height: 100%; border-radius: 4px; transition: var(--transition); }
+
+        .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .choice-item {
+            padding: 12px;
+            border: 1px solid #EEE;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+        }
+        .choice-item.selected { border-color: var(--primary); background: rgba(212, 116, 138, 0.05); color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="mobile-header">
+        <div class="logo" style="margin:0">Prime Estética</div>
+        <button class="btn btn-ghost" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i data-lucide="shield-check"></i></div>
+                <span id="sidebar-studio-name">Prime Estética</span>
+            </div>
+            <nav>
+                <div class="nav-item active" onclick="showView('dashboard')"><i data-lucide="layout-dashboard"></i><span>Visão Geral</span></div>
+                <div class="nav-item" onclick="showView('agenda')"><i data-lucide="calendar"></i><span>Agenda</span></div>
+                
+                <div style="margin: 15px 0 5px 20px; font-size: 11px; text-transform: uppercase; color: #BBB; font-weight: 700; letter-spacing: 1px;">Gestão</div>
+                <div class="nav-item" onclick="showView('clientes')"><i data-lucide="users"></i><span>Meus Clientes</span></div>
+                <div class="nav-item" onclick="showView('servicos')"><i data-lucide="activity"></i><span>Procedimentos</span></div>
+                <div class="nav-item" onclick="showView('estoque')"><i data-lucide="package"></i><span>Estoque & Materiais</span></div>
+                
+                <div style="margin: 15px 0 5px 20px; font-size: 11px; text-transform: uppercase; color: #BBB; font-weight: 700; letter-spacing: 1px;">Financeiro</div>
+                <div class="nav-item" onclick="showView('caixa')"><i data-lucide="wallet"></i><span>Fluxo de Caixa</span></div>
+                <div class="nav-item" onclick="openModal('nova-transacao', {tipo: 'entrada'})"><i data-lucide="shopping-bag"></i><span>Vendas (Manual)</span></div>
+                <div class="nav-item" onclick="openModal('nova-transacao')"><i data-lucide="minus-circle"></i><span>Lançar Despesa</span></div>
+                <div class="nav-item" onclick="gerarRelatorioMes()"><i data-lucide="pie-chart"></i><span>Relatórios</span></div>
+                
+                <div style="margin: 15px 0 5px 20px; font-size: 11px; text-transform: uppercase; color: #BBB; font-weight: 700; letter-spacing: 1px;">Negócio</div>
+                <div class="nav-item" onclick="showView('config')"><i data-lucide="building-2"></i><span>Minha Clínica</span></div>
+                <div class="nav-item" onclick="toast('Módulo Marketing em breve')"><i data-lucide="megaphone"></i><span>Marketing</span></div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Content will be injected here via JS -->
+        </main>
+    </div>
+
+    <!-- Client Self-Registration View -->
+    <div id="client-view">
+        <div id="client-steps-container"></div>
+    </div>
+
+    <!-- Global Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal" id="modal-content" onclick="event.stopPropagation()">
+            <!-- Modal content injected here -->
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">Operação realizada!</div>
+
+    <script>
+        // --- DATA STATE ---
+        let state = {
+            view: 'dashboard',
+            clientes: [],
+            agendamentos: [],
+            transacoes: [],
+            produtos: [],
+            servicos: [],
+            profissionais: [],
+            avaliacoes: [],
+            config: {
+                nomeClinica: 'Prime Estética Avançada',
+                whatsapp: '5511999999999',
+                apiWebhook: '',
+                horarios: '08:00 - 20:00',
+                templates: {
+                    confirmacao: "Olá [nome]! 😊 Seu agendamento foi confirmado para [dia] às [hora] — [servico]. Te esperamos! 💖",
+                    aniversario: "Parabéns, [nome]! 🎂✨ No seu mês, você ganhou um presente especial: 15% de desconto em qualquer procedimento! Vamos agendar?",
+                    lembrete: "Olá [nome]! Passando para lembrar do seu horário amanhã às [hora]. Até logo! 😊",
+                    avaliacao: "Olá [nome]! Adoramos te atender. Conte-nos o que achou da sua experiência: [link]",
+                    ficha: "Olá [nome]! ✨ Para agilizarmos seu atendimento, poderia preencher sua ficha de anamnese rapidinho neste link? [link]"
+                }
+            }
+        };
+
+        // --- MOCK DATA INITIALIZATION ---
+        function initData() {
+            const getHojeLocal = () => {
+                const d = new Date();
+                return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+            };
+            const hoje = getHojeLocal();
+
+            const saved = localStorage.getItem('beautyflow_data');
+            if (saved) {
+                state = JSON.parse(saved);
+                // Garantir que campos novos existam
+                if (!state.config.templates) {
+                    state.config.templates = {
+                        confirmacao: "Olá [nome]! 😊 Seu agendamento foi confirmado para [dia] às [hora] — [servico]. Te esperamos! 💖",
+                        aniversario: "Parabéns, [nome]! 🎂✨ No seu mês, você ganhou um presente especial: 15% de desconto em qualquer procedimento! Vamos agendar?",
+                        lembrete: "Olá [nome]! Passando para lembrar do seu horário amanhã às [hora]. Até logo! 😊",
+                        avaliacao: "Olá [nome]! Adoramos te atender. Conte-nos o que achou da sua experiência: [link]",
+                        ficha: "Olá [nome]! ✨ Para agilizarmos seu atendimento, poderia preencher sua ficha de anamnese rapidinho neste link? [link]"
+                    };
+                }
+                if (!state.avaliacoes) state.avaliacoes = [];
+            } else {
+                state.clientes = [
+                    { id: 'c1', nome: 'Ana Silva', whatsapp: '5511988887777', fichaCompleta: true, ultimaVisita: '2024-04-10', totalVisitas: 15, alergias: 'Nenhuma', linkId: 'ana123', pontos: 450, nascimento: '1995-04-23' },
+                    { id: 'c2', nome: 'Beatriz Costa', whatsapp: '5511977776666', fichaCompleta: true, ultimaVisita: '2024-03-15', totalVisitas: 8, linkId: 'bea456', pontos: 240, nascimento: '1990-10-12' },
+                    { id: 'c3', nome: 'Carla Souza', whatsapp: '5511966665555', fichaCompleta: true, ultimaVisita: '2024-01-20', totalVisitas: 22, linkId: 'car789', pontos: 820, nascimento: '1988-05-05' },
+                    { id: 'c4', nome: 'Daniela Lima', whatsapp: '5511955554444', fichaCompleta: true, ultimaVisita: hoje, totalVisitas: 1, linkId: 'dan012', pontos: 100, nascimento: '1992-12-25' }
+                ];
+                state.servicos = [
+                    { id: 's1', nome: 'Toxina Botulínica (Botox)', duracao: 30, preco: 1200, pontos: 100, custo: 400 },
+                    { id: 's2', nome: 'Preenchimento Labial', duracao: 45, preco: 1500, pontos: 150, custo: 500 },
+                    { id: 's3', nome: 'Limpeza de Pele Profunda', duracao: 60, preco: 250, pontos: 30, custo: 50 },
+                    { id: 's4', nome: 'Bioestimulador de Colágeno', duracao: 45, preco: 2200, pontos: 200, custo: 800 }
+                ];
+                state.profissionais = [
+                    { id: 'p1', nome: 'Dra. Fernanda' },
+                    { id: 'p2', nome: 'Dra. Juliana' }
+                ];
+                state.agendamentos = [
+                    { id: 'a1', clienteId: 'c1', servicoId: 's1', data: hoje, hora: '09:00', status: 'realizado', profissionalId: 'p1' },
+                    { id: 'a2', clienteId: 'c2', servicoId: 's2', data: hoje, hora: '10:30', status: 'realizado', profissionalId: 'p2' },
+                    { id: 'a3', clienteId: 'c4', servicoId: 's4', data: hoje, hora: '14:00', status: 'confirmado', profissionalId: 'p1' },
+                    { id: 'a4', clienteId: 'c3', servicoId: 's2', data: hoje, hora: '15:30', status: 'confirmado', profissionalId: 'p2' },
+                    { id: 'a5', clienteId: 'c1', servicoId: 's1', data: hoje, hora: '17:00', status: 'confirmado', profissionalId: 'p1' }
+                ];
+                state.produtos = [
+                    { id: 'pr1', nome: 'Botox 100u', qtd: 12, min: 5, un: 'un', cat: 'Injetáveis' },
+                    { id: 'pr2', nome: 'Ácido Hialurônico', qtd: 18, min: 5, un: 'seringas', cat: 'Injetáveis' },
+                    { id: 'pr3', nome: 'Máscara Ouro', qtd: 15, min: 5, un: 'un', cat: 'Limpeza' }
+                ];
+                state.transacoes = [
+                    { id: 't1', tipo: 'entrada', valor: 3200, desc: 'Pacote Harmonização - Carla Souza', data: hoje, fpag: 'Pix' },
+                    { id: 't2', tipo: 'entrada', valor: 1200, desc: 'Botox - Ana Silva', data: hoje, fpag: 'Cartão' },
+                    { id: 't3', tipo: 'entrada', valor: 1500, desc: 'Preenchimento - Beatriz Costa', data: hoje, fpag: 'Pix' },
+                    { id: 't4', tipo: 'entrada', valor: 2200, desc: 'Bioestimulador - Daniela Lima', data: hoje, fpag: 'Pix' },
+                    { id: 't5', tipo: 'entrada', valor: 4350, desc: 'Vendas Produtos Home Care', data: hoje, fpag: 'Cartão' },
+                    { id: 't6', tipo: 'saida', valor: 450, desc: 'Reposição de Materiais', data: hoje, fpag: 'Pix' }
+                ];
+                state.config.nomeClinica = 'Prime Estética Luxury';
+                save();
+            }
+        }
+
+        function save() {
+            localStorage.setItem('beautyflow_data', JSON.stringify(state));
+        }
+
+        // --- UI ROUTING ---
+        function showView(viewName) {
+            state.view = viewName;
+            
+            // Update active sidebar item
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+                // Usando o atributo onclick ou comparando com um mapeamento para saber qual item ativar
+                const onClickAttr = el.getAttribute('onclick');
+                if (onClickAttr && onClickAttr.includes(`'${viewName}'`)) {
+                    el.classList.add('active');
+                }
+            });
+
+            const main = document.getElementById('main-content');
+            
+            if (viewName === 'dashboard') renderDashboard(main);
+            else if (viewName === 'agenda') renderAgenda(main);
+            else if (viewName === 'agenda-semanal') renderAgendaSemanal(main);
+            else if (viewName === 'clientes') renderClientes(main);
+            else if (viewName === 'servicos') renderServicos(main);
+            else if (viewName === 'caixa') renderCaixa(main);
+            else if (viewName === 'estoque') renderEstoque(main);
+            else if (viewName === 'config') renderConfig(main);
+
+            lucide.createIcons();
+        }
+
+        // --- AGENDA SEMANAL ---
+        function renderAgendaSemanal(container) {
+            const startOfWeek = new Date(agendaData);
+            startOfWeek.setDate(agendaData.getDate() - agendaData.getDay());
+            
+            const dias = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(startOfWeek);
+                d.setDate(startOfWeek.getDate() + i);
+                dias.push(d);
+            }
+
+            container.innerHTML = `
+                <header>
+                    <h1>Agenda Semanal</h1>
+                    <button class="btn btn-primary" onclick="showView('agenda')">Voltar p/ Diária</button>
+                </header>
+                <div class="card" style="overflow-x: auto;">
+                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; min-width: 800px;">
+                        ${dias.map(d => {
+                            const dStr = d.toISOString().split('T')[0];
+                            const ags = state.agendamentos.filter(a => a.data === dStr);
+                            return `
+                                <div style="border-right: 1px solid #EEE; padding-right: 10px;">
+                                    <div style="text-align: center; font-weight: 700; margin-bottom: 15px; border-bottom: 2px solid var(--primary);">
+                                        ${d.toLocaleDateString('pt-BR', {weekday: 'short'})}<br>
+                                        <span style="font-size: 12px; color: var(--text-light)">${d.getDate()}</span>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        ${ags.map(a => `<div class="badge badge-${a.status}" style="font-size: 9px; cursor:pointer" onclick="openModal('detalhe-agendamento', ${JSON.stringify(a).replace(/"/g, '&quot;')})">${a.hora}</div>`).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- DASHBOARD ---
+        function renderDashboard(container) {
+            const studioName = state.config.nomeClinica || 'Bem-vinda';
+            
+            // Helper para pegar a data local YYYY-MM-DD
+            const getHojeLocal = () => {
+                const d = new Date();
+                return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+            };
+            
+            const hoje = getHojeLocal();
+            const hojeMMDD = hoje.slice(5);
+            
+            const agendamentosHoje = state.agendamentos.filter(a => a.data === hoje);
+            const receitaHoje = state.transacoes.filter(t => t.data === hoje && t.tipo === 'entrada').reduce((acc, t) => acc + t.valor, 0);
+            const despesaHoje = state.transacoes.filter(t => t.data === hoje && t.tipo === 'saida').reduce((acc, t) => acc + t.valor, 0);
+            
+            const aniversariantes = state.clientes.filter(c => c.nascimento && c.nascimento.slice(5) === hojeMMDD);
+            const estoqueBaixo = state.produtos.filter(p => p.qtd < p.min).length;
+
+            container.innerHTML = `
+                <!-- Topbar -->
+                <div class="topbar">
+                    <div class="search-bar">
+                        <i data-lucide="search" style="width: 18px;"></i>
+                        <input type="text" placeholder="Busque por clientes, serviços...">
+                    </div>
+                    <div class="user-profile">
+                        <div class="avatar" style="width: 35px; height: 35px; margin: 0; font-size: 14px;">${studioName[0]}</div>
+                        <span style="display: none; @media(min-width: 768px){display: block;}">${studioName}</span>
+                    </div>
+                </div>
+
+                <header style="margin-bottom: 24px;">
+                    <div>
+                        <h1>Olá, ${studioName}! ✨</h1>
+                        <p style="color: var(--text-light); font-size: 14px;">Tenha um ótimo dia de atendimentos.</p>
+                    </div>
+                </header>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="qa-btn" style="background: var(--pastel-blue);" onclick="openModal('novo-agendamento')">
+                        <div class="qa-icon" style="color: #1E88E5;"><i data-lucide="calendar-plus"></i></div>
+                        Novo<br>Agendamento
+                    </button>
+                    <button class="qa-btn" style="background: var(--pastel-pink);" onclick="openModal('novo-cliente')">
+                        <div class="qa-icon" style="color: #D81B60;"><i data-lucide="user-plus"></i></div>
+                        Novo<br>Cliente
+                    </button>
+                    <button class="qa-btn" style="background: var(--pastel-green);" onclick="showView('caixa')">
+                        <div class="qa-icon" style="color: #43A047;"><i data-lucide="wallet"></i></div>
+                        Fluxo de<br>Caixa
+                    </button>
+                    <button class="qa-btn" style="background: var(--pastel-orange);" onclick="openModal('nova-transacao')">
+                        <div class="qa-icon" style="color: #F57C00;"><i data-lucide="minus-circle"></i></div>
+                        Lançar<br>Despesa
+                    </button>
+                </div>
+
+                <div class="dashboard-content" style="grid-template-columns: 2fr 1fr; display: grid; gap: 24px;">
+                    
+                    <!-- Coluna Principal -->
+                    <div>
+                        <h3 style="margin-bottom: 16px; font-size: 16px;">Saúde do Negócio</h3>
+                        <div class="stats-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 24px;">
+                            <div class="card stat-card" style="border-left: 4px solid var(--success);">
+                                <i data-lucide="trending-up" class="stat-icon" style="color: var(--success)"></i>
+                                <span class="stat-value" style="color: var(--success)">R$ ${receitaHoje.toFixed(2)}</span>
+                                <span class="stat-label">Receitas Hoje</span>
+                            </div>
+                            <div class="card stat-card" style="border-left: 4px solid var(--danger);">
+                                <i data-lucide="trending-down" class="stat-icon" style="color: var(--danger)"></i>
+                                <span class="stat-value" style="color: var(--danger)">R$ ${despesaHoje.toFixed(2)}</span>
+                                <span class="stat-label">Despesas Hoje</span>
+                            </div>
+                            <div class="card stat-card" style="border-left: 4px solid var(--primary);">
+                                <i data-lucide="clock" class="stat-icon" style="color: var(--primary)"></i>
+                                <span class="stat-value">${agendamentosHoje.length}</span>
+                                <span class="stat-label">Agendamentos Hoje</span>
+                            </div>
+                            <div class="card stat-card" onclick="showView('estoque')" style="cursor:pointer; border-left: 4px solid var(--warning);">
+                                <i data-lucide="package" class="stat-icon" style="color: var(--warning)"></i>
+                                <span class="stat-value">${estoqueBaixo}</span>
+                                <span class="stat-label">Itens com Estoque Baixo</span>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-bottom: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h3 style="color: var(--text);">🏆 Performance de Serviços (Mês)</h3>
+                            </div>
+                            <div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                    <thead>
+                                        <tr style="text-align: left; border-bottom: 1px solid var(--border); color: var(--text-light);">
+                                            <th style="padding: 12px 5px;">Serviço</th>
+                                            <th style="padding: 12px 5px; text-align: center;">Qtd</th>
+                                            <th style="padding: 12px 5px; text-align: right;">Custo</th>
+                                            <th style="padding: 12px 5px; text-align: right;">Lucro</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${(() => {
+                                            const mesAtual = new Date().getMonth();
+                                            const anoAtual = new Date().getFullYear();
+                                            const realizados = state.agendamentos.filter(a => {
+                                                const d = new Date(a.data);
+                                                return d.getMonth() === mesAtual && d.getFullYear() === anoAtual && a.status === 'realizado';
+                                            });
+                                            
+                                            const stats = {};
+                                            realizados.forEach(a => {
+                                                if (!stats[a.servicoId]) stats[a.servicoId] = { count: 0, receita: 0, custo: 0 };
+                                                const s = state.servicos.find(ser => ser.id === a.servicoId);
+                                                if (s) {
+                                                    stats[a.servicoId].count++;
+                                                    stats[a.servicoId].receita += s.preco;
+                                                    stats[a.servicoId].custo += (s.custo || 0);
+                                                    stats[a.servicoId].nome = s.nome;
+                                                }
+                                            });
+                                            
+                                            return Object.values(stats).sort((a,b) => b.count - a.count).map(s => `
+                                                <tr style="border-bottom: 1px solid #FAFAFA;">
+                                                    <td style="padding: 12px 5px; font-weight: 500;">${s.nome}</td>
+                                                    <td style="padding: 12px 5px; text-align: center;">${s.count}</td>
+                                                    <td style="padding: 12px 5px; text-align: right; color: var(--text-light);">R$ ${s.custo.toFixed(2)}</td>
+                                                    <td style="padding: 12px 5px; text-align: right; color: var(--success); font-weight: 600;">R$ ${(s.receita - s.custo).toFixed(2)}</td>
+                                                </tr>
+                                            `).join('') || '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">Sem dados este mês.</td></tr>';
+                                        })()}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Direita -->
+                    <div>
+                        <div class="card" style="margin-bottom: 24px; padding: 20px;">
+                            <h3 style="margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 8px;"><i data-lucide="calendar" style="width: 18px; color: var(--primary);"></i> Calendário</h3>
+                            <div style="background: var(--bg); border-radius: 12px; padding: 15px; text-align: center; border: 1px solid var(--border);">
+                                <div style="font-weight: 600; margin-bottom: 15px; font-size: 14px;">${new Date().toLocaleDateString('pt-BR', {month:'long', year:'numeric'}).toUpperCase()}</div>
+                                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; font-size: 11px; font-weight: 600; color: var(--text-light); margin-bottom: 8px;">
+                                    <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; font-size: 12px;">
+                                    ${Array.from({length: 31}, (_, i) => {
+                                        const isToday = (i+1) === new Date().getDate();
+                                        return `<div style="padding: 6px 0; border-radius: 6px; ${isToday ? 'background: var(--primary); color: white; font-weight: bold;' : 'color: var(--text);'}">${i+1}</div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 style="margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 8px;"><i data-lucide="cake" style="width: 18px; color: var(--pastel-pink);"></i> Aniversariantes do Mês</h3>
+                            <div class="data-list">
+                                ${state.clientes.filter(c => c.nascimento && c.nascimento.split('-')[1] === (new Date().getMonth() + 1).toString().padStart(2, '0')).map(c => {
+                                    const isToday = c.nascimento.slice(5) === hojeMMDD;
+                                    return `
+                                    <div class="data-item" style="padding: 12px 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent;">
+                                        <div class="item-info">
+                                            <div class="item-title" style="font-size: 13px;">${c.nome} ${isToday ? '🎉' : ''}</div>
+                                            <div class="item-subtitle" style="font-size: 11px;">Dia ${c.nascimento.split('-')[2]}</div>
+                                        </div>
+                                        <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 11px; color: var(--primary);" onclick="enviarWhats('${c.whatsapp}', 'aniversario', {nome: '${c.nome}'})">
+                                            <i data-lucide="message-circle" style="width: 14px;"></i>
+                                        </button>
+                                    </div>
+                                `}).join('') || '<p style="color: var(--text-light); font-size: 13px;">Nenhum aniversariante neste mês.</p>'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // --- AGENDA ---
+        let agendaData = new Date();
+
+        function renderAgenda(container) {
+            const dataStr = agendaData.toISOString().split('T')[0];
+            
+            container.innerHTML = `
+                <header>
+                    <h1>Agenda Diária</h1>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-outline" onclick="showView('agenda-semanal')"><i data-lucide="columns"></i> Semanal</button>
+                        <button class="btn btn-primary" onclick="openModal('novo-agendamento')"><i data-lucide="plus"></i> Novo Horário</button>
+                    </div>
+                </header>
+
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="btn btn-ghost" onclick="mudarData(-1)"><i data-lucide="chevron-left"></i></button>
+                        <span style="font-weight: 700;">${agendaData.toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'})}</span>
+                        <button class="btn btn-ghost" onclick="mudarData(1)"><i data-lucide="chevron-right"></i></button>
+                    </div>
+
+                    <div class="agenda-grid">
+                        <div class="time-col">
+                            ${Array.from({length: 13}, (_, i) => `<div class="time-slot">${(i + 8).toString().padStart(2, '0')}:00</div>`).join('')}
+                        </div>
+                        <div class="grid-col" id="agenda-slots" style="position: relative;">
+                            ${Array.from({length: 12}, (_, i) => `<div class="grid-row" onclick="openModal('novo-agendamento', {hora: '${(i+8).toString().padStart(2, '0')}:00'})"></div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render blocks
+            const slots = document.getElementById('agenda-slots');
+            state.agendamentos.filter(a => a.data === dataStr).forEach(a => {
+                const hour = parseInt(a.hora.split(':')[0]);
+                const min = parseInt(a.hora.split(':')[1]);
+                const top = ((hour - 8) * 60) + min;
+                const s = state.servicos.find(ser => ser.id === a.servicoId);
+                const c = state.clientes.find(cli => cli.id === a.clienteId);
+                const duracao = s ? s.duracao : 30;
+
+                const block = document.createElement('div');
+                block.className = 'appointment-block';
+                block.style.top = top + 'px';
+                block.style.height = duracao + 'px';
+                block.innerHTML = `<strong>${a.hora}</strong> ${c ? c.nome : 'Cli'} - ${s ? s.nome : 'Srv'}`;
+                block.onclick = (e) => { e.stopPropagation(); openModal('detalhe-agendamento', a); };
+                slots.appendChild(block);
+            });
+            lucide.createIcons();
+        }
+
+        function mudarData(dias) {
+            agendaData.setDate(agendaData.getDate() + dias);
+            renderAgenda(document.getElementById('main-content'));
+        }
+
+        // --- CLIENTES ---
+        function renderClientes(container) {
+            container.innerHTML = `
+                <header>
+                    <h1>Clientes</h1>
+                    <button class="btn btn-primary" onclick="openModal('novo-cliente')"><i data-lucide="user-plus"></i> Novo Cadastro</button>
+                </header>
+
+                <div class="card" style="margin-bottom: 24px;">
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <i data-lucide="search" style="color: var(--text-light)"></i>
+                        <input type="text" class="form-control" placeholder="Buscar por nome ou WhatsApp..." onkeyup="filterClientes(this.value)" style="border: none;">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="data-list" id="clientes-lista">
+                        ${renderClientesList(state.clientes)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderClientesList(list) {
+            return list.map(c => {
+                const diff = (new Date() - new Date(c.ultimaVisita)) / (1000 * 60 * 60 * 24);
+                const isAtrasado = diff > 60;
+                return `
+                    <div class="data-item" onclick="openModal('perfil-cliente', '${c.id}')" style="cursor:pointer">
+                        <div class="avatar" style="background: ${c.fichaCompleta ? 'var(--primary)' : 'var(--warning)'}">
+                            ${c.nome[0]}
+                        </div>
+                        <div class="item-info">
+                            <div class="item-title">
+                                ${c.nome} 
+                                ${isAtrasado ? '<span style="color: var(--danger); font-size: 10px;">🔴 +60 dias</span>' : ''}
+                            </div>
+                            <div class="item-subtitle">${c.whatsapp} • ${c.totalVisitas} visitas</div>
+                        </div>
+                        <div>
+                            ${c.fichaCompleta ? '<span class="badge badge-done">Ficha OK</span>' : '<span class="badge badge-pending">Incompleta</span>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- SERVICOS ---
+        function renderServicos(container) {
+            container.innerHTML = `
+                <header>
+                    <h1>Serviços</h1>
+                    <button class="btn btn-primary" onclick="openModal('novo-servico')"><i data-lucide="plus"></i> Novo Serviço</button>
+                </header>
+
+                <div class="card">
+                    <div class="data-list" id="servicos-lista-main">
+                        ${state.servicos.map(s => `
+                            <div class="data-item">
+                                <div class="avatar" style="background: rgba(212, 116, 138, 0.1); color: var(--primary)">
+                                    <i data-lucide="sparkles" style="width: 20px;"></i>
+                                </div>
+                                <div class="item-info">
+                                    <div class="item-title">${s.nome}</div>
+                                    <div class="item-subtitle">${s.duracao} min • R$ ${s.preco.toFixed(2)}</div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-ghost" onclick="excluirServico('${s.id}')" style="color: var(--danger)">
+                                        <i data-lucide="trash-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CAIXA ---
+        function renderCaixa(container) {
+            const entradas = state.transacoes.filter(t => t.tipo === 'entrada').reduce((a, b) => a + b.valor, 0);
+            const saidas = state.transacoes.filter(t => t.tipo === 'saida').reduce((a, b) => a + b.valor, 0);
+
+            container.innerHTML = `
+                <header>
+                    <h1>Caixa</h1>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-outline" onclick="gerarRelatorioMes()"><i data-lucide="file-text"></i> Relatório do Mês</button>
+                        <button class="btn btn-primary" onclick="openModal('nova-transacao')"><i data-lucide="plus"></i> Movimentação</button>
+                    </div>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="card stat-card" style="border-left-color: var(--success)">
+                        <span class="stat-label">Saldo Atual</span>
+                        <span class="stat-value" style="color: var(--success)">R$ ${(entradas - saidas).toFixed(2)}</span>
+                    </div>
+                    <div class="card stat-card">
+                        <span class="stat-label">Entradas (Mês)</span>
+                        <span class="stat-value">R$ ${entradas.toFixed(2)}</span>
+                    </div>
+                    <div class="card stat-card">
+                        <span class="stat-label">Saídas (Mês)</span>
+                        <span class="stat-value" style="color: var(--danger)">R$ ${saidas.toFixed(2)}</span>
+                    </div>
+                    <div class="card stat-card">
+                        <span class="stat-label">Ticket Médio</span>
+                        <span class="stat-value">R$ ${state.agendamentos.filter(a => a.status === 'realizado').length ? (entradas / state.agendamentos.filter(a => a.status === 'realizado').length).toFixed(2) : '0.00'}</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Movimentações Recentes</h3>
+                    <div class="data-list">
+                        ${state.transacoes.sort((a,b) => new Date(b.data) - new Date(a.data)).map(t => `
+                            <div class="data-item">
+                                <div style="margin-right: 16px; color: ${t.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)'}">
+                                    <i data-lucide="${t.tipo === 'entrada' ? 'arrow-up-circle' : 'arrow-down-circle'}"></i>
+                                </div>
+                                <div class="item-info">
+                                    <div class="item-title">${t.desc}</div>
+                                    <div class="item-subtitle">${new Date(t.data).toLocaleDateString('pt-BR')} • ${t.fpag}</div>
+                                </div>
+                                <div style="font-weight: 700; color: ${t.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)'}">
+                                    ${t.tipo === 'entrada' ? '+' : '-'} R$ ${t.valor.toFixed(2)}
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-left: 16px;">
+                                    ${t.tipo === 'saida' ? `
+                                        <button class="btn btn-ghost" onclick="openModal('nova-transacao', ${JSON.stringify(t).replace(/"/g, '&quot;')})" style="padding: 5px; color: var(--primary)"><i data-lucide="edit" style="width: 16px;"></i></button>
+                                        <button class="btn btn-ghost" onclick="excluirTransacao('${t.id}')" style="padding: 5px; color: var(--danger)"><i data-lucide="trash-2" style="width: 16px;"></i></button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ESTOQUE ---
+        function renderEstoque(container) {
+            container.innerHTML = `
+                <header>
+                    <h1>Estoque</h1>
+                    <button class="btn btn-primary" onclick="openModal('novo-produto')"><i data-lucide="plus"></i> Novo Produto</button>
+                </header>
+
+                <div class="card">
+                    <div class="data-list">
+                        ${state.produtos.map(p => {
+                            const percent = Math.min((p.qtd / (p.min * 1.5)) * 100, 100);
+                            const color = p.qtd < p.min ? 'var(--danger)' : (p.qtd < p.min * 1.2 ? 'var(--warning)' : 'var(--success)');
+                            return `
+                                <div class="data-item" style="flex-direction: column; align-items: stretch; padding: 20px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <div class="item-info">
+                                            <div class="item-title">${p.nome} <span class="badge" style="background: #EEE; color: #666; margin-left: 8px;">${p.cat}</span></div>
+                                            <div class="item-subtitle">${p.qtd} ${p.un} no estoque (mín: ${p.min})</div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px;">
+                                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px; border-color: var(--success); color: var(--success);" onclick="reporEstoque('${p.id}')">Repor</button>
+                                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" onclick="darBaixaEstoque('${p.id}')">Dar Baixa</button>
+                                        </div>
+                                    </div>
+                                    <div class="stock-bar-bg">
+                                        <div class="stock-bar-fill" style="width: ${percent}%; background: ${color}"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CONFIGURAÇÕES ---
+        function renderConfig(container) {
+            container.innerHTML = `
+                <header><h1>Configurações</h1></header>
+                <div class="dashboard-content" style="grid-template-columns: 1fr 1fr">
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px;">Meu Negócio</h3>
+                        <div class="form-group">
+                            <label>Nome da Clínica</label>
+                            <input type="text" class="form-control" id="cfg-nome" value="${state.config.nomeClinica}">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp Comercial</label>
+                            <input type="text" class="form-control" id="cfg-whats" value="${state.config.whatsapp}">
+                        </div>
+                        <button class="btn btn-primary" onclick="salvarConfigGeral()">Salvar Mudanças</button>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px;">Templates de Mensagem 💬</h3>
+                        ${Object.keys(state.config.templates).map(key => `
+                            <div class="form-group">
+                                <label style="text-transform: capitalize;">${key}</label>
+                                <textarea class="form-control" id="tpl-${key}" style="height: 80px; font-size: 13px;">${state.config.templates[key]}</textarea>
+                            </div>
+                        `).join('')}
+                        <button class="btn btn-outline" style="width: 100%" onclick="salvarTemplates()">Salvar Templates</button>
+                    </div>
+                    <div class="card" style="margin-top: 32px; grid-column: span 2;">
+                        <h3 style="margin-bottom: 12px;">Integração WhatsApp (Automático)</h3>
+                        <p style="color: var(--text-light); font-size: 14px; margin-bottom: 20px;">
+                            Para enviar mensagens automáticas, integre com uma API (Evolution API ou Z-API).
+                        </p>
+                        <div class="form-group">
+                            <label>Webhook URL</label>
+                            <input type="text" class="form-control" placeholder="https://sua-api.com/webhook" value="${state.config.apiWebhook}">
+                        </div>
+                        <button class="btn btn-primary" onclick="toast('Integração em desenvolvimento...')">Testar Conexão</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- MODAL SYSTEM ---
+        function openModal(type, data = null) {
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            overlay.classList.add('active');
+
+            if (type === 'novo-cliente') {
+                content.innerHTML = `
+                    <h2 style="margin-bottom: 24px;">Cadastrar Cliente</h2>
+                    <div class="form-group">
+                        <label>Nome Completo *</label>
+                        <input type="text" id="new-cli-nome" class="form-control" placeholder="Ex: Maria Oliveira">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp (com DDD) *</label>
+                        <input type="text" id="new-cli-tel" class="form-control" placeholder="Ex: 11988887777">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Aniversário (Opcional)</label>
+                            <input type="date" id="new-cli-nasc" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Instagram (Opcional)</label>
+                            <input type="text" id="new-cli-insta" class="form-control" placeholder="@usuario">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 32px;">
+                        <button class="btn btn-ghost" onclick="closeModal()" style="flex: 1">Cancelar</button>
+                        <button class="btn btn-primary" onclick="saveNovoCliente()" style="flex: 2">Salvar Cadastro</button>
+                    </div>
+                `;
+            }
+
+            if (type === 'nova-transacao') {
+                editingTransacaoId = data ? data.id : null;
+                const trTipo = data ? data.tipo : 'saida';
+                content.innerHTML = `
+                    <h2 style="margin-bottom: 24px;">${data ? 'Editar Movimentação' : 'Lançar Movimentação'}</h2>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label>Tipo de Movimentação</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
+                            <button class="btn ${trTipo === 'entrada' ? 'btn-primary' : 'btn-outline'}" id="btn-tr-entrada" onclick="setTrTipo('entrada')" style="text-transform: none; padding: 10px;">Entrada</button>
+                            <button class="btn ${trTipo === 'saida' ? 'btn-primary' : 'btn-outline'}" id="btn-tr-saida" onclick="setTrTipo('saida')" style="text-transform: none; padding: 10px;">Saída</button>
+                        </div>
+                        <input type="hidden" id="new-tr-tipo" value="${trTipo}">
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <input type="text" id="new-tr-desc" class="form-control" placeholder="Ex: Aluguel, Venda de Produto..." value="${data ? data.desc : ''}">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Valor (R$)</label>
+                            <input type="number" id="new-tr-valor" class="form-control" placeholder="0.00" value="${data ? data.valor : ''}">
+                        </div>
+                        <div class="form-group">
+                            <label>Data</label>
+                            <input type="date" id="new-tr-data" class="form-control" value="${data ? data.data : new Date().toLocaleDateString('en-CA')}">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 12px;" onclick="saveNovaTransacao()">${data ? 'Salvar Alterações' : 'Lançar no Caixa'}</button>
+                `;
+            }
+
+            if (type === 'novo-produto') {
+                content.innerHTML = `
+                    <h2 style="margin-bottom: 24px;">Novo Produto</h2>
+                    <div class="form-group">
+                        <label>Nome do Produto</label>
+                        <input type="text" id="new-pr-nome" class="form-control" placeholder="Ex: Cera Mel">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Qtd Atual</label>
+                            <input type="number" id="new-pr-qtd" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Mínimo</label>
+                            <input type="number" id="new-pr-min" class="form-control" value="5">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 12px;" onclick="saveNovoProduto()">Cadastrar Produto</button>
+                `;
+            }
+
+            if (type === 'novo-servico') {
+                content.innerHTML = `
+                    <h2 style="margin-bottom: 24px;">Adicionar Serviço</h2>
+                    <div class="form-group">
+                        <label>Nome do Serviço *</label>
+                        <input type="text" id="new-srv-nome" class="form-control" placeholder="Ex: Microagulhamento">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Duração (minutos) *</label>
+                            <input type="number" id="new-srv-dur" class="form-control" placeholder="45">
+                        </div>
+                        <div class="form-group">
+                            <label>Preço (R$) *</label>
+                            <input type="number" id="new-srv-preco" class="form-control" placeholder="150">
+                        </div>
+                        <div class="form-group">
+                            <label>Custo Mat. (R$)</label>
+                            <input type="number" id="new-srv-custo" class="form-control" placeholder="30.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Pontos Gerados (Programa Fidelidade)</label>
+                        <input type="number" id="new-srv-pts" class="form-control" placeholder="10">
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 12px;">
+                        <button class="btn btn-ghost" onclick="closeModal()" style="flex: 1">Cancelar</button>
+                        <button class="btn btn-primary" onclick="saveNovoServico()" style="flex: 2">Salvar Serviço</button>
+                    </div>
+                `;
+            }
+
+            if (type === 'novo-agendamento') {
+                content.innerHTML = `
+                    <h2 style="margin-bottom: 24px;">Novo Agendamento</h2>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <select id="new-age-cli" class="form-control">
+                            ${state.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Serviço</label>
+                        <select id="new-age-srv" class="form-control">
+                            ${state.servicos.map(s => `<option value="${s.id}">${s.nome} (R$ ${s.preco})</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Hora</label>
+                            <input type="time" id="new-age-hora" class="form-control" value="${data && data.hora ? data.hora : '08:00'}">
+                        </div>
+                        <div class="form-group">
+                            <label>Data</label>
+                            <input type="date" id="new-age-data" class="form-control" value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 12px;" onclick="saveNovoAgendamento()">Confirmar Horário</button>
+                `;
+            }
+
+            if (type === 'detalhe-agendamento') {
+                const c = state.clientes.find(cli => cli.id === data.clienteId);
+                const s = state.servicos.find(ser => ser.id === data.servicoId);
+                content.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <span class="badge badge-${data.status}">${data.status}</span>
+                        <h2 style="margin-top: 12px;">${c ? c.nome : 'Cliente'}</h2>
+                        <p style="color: var(--text-light)">${s ? s.nome : 'Serviço'} • ${data.hora}</p>
+                    </div>
+                    <div style="display: grid; gap: 12px;">
+                        ${data.status !== 'realizado' ? `
+                            <button class="btn btn-primary" onclick="marcarComoRealizado('${data.id}')" style="justify-content: center;">
+                                <i data-lucide="check"></i> Marcar como Realizado
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-outline" onclick="enviarWhats('${c.whatsapp}', 'confirmacao', {nome: '${c.nome}', servico: '${s.nome}', hora: '${data.hora}'})" style="justify-content: center;">
+                            <i data-lucide="message-circle"></i> Enviar Confirmação
+                        </button>
+                        <button class="btn btn-ghost" onclick="excluirAgendamento('${data.id}')" style="justify-content: center; color: var(--danger)">
+                            <i data-lucide="trash-2"></i> Cancelar Agendamento
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (type === 'perfil-cliente') {
+                const c = state.clientes.find(cli => cli.id === data);
+                if (!c.fotos) c.fotos = [];
+
+                content.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                        <div class="avatar" style="width: 60px; height: 60px; font-size: 24px;">${c.nome[0]}</div>
+                        <div>
+                            <h2>${c.nome}</h2>
+                            <p style="color: var(--text-light)">${c.whatsapp} • ${c.insta || 'Sem Instagram'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                        <div class="card stat-card" style="padding: 15px; border-left-color: var(--primary)">
+                            <span class="stat-label" style="font-size: 10px;">Saldo Fidelidade</span>
+                            <span class="stat-value" style="font-size: 20px;">${c.pontos || 0} pts</span>
+                        </div>
+                        <div class="card stat-card" style="padding: 15px;">
+                            <span class="stat-label" style="font-size: 10px;">Total Visitas</span>
+                            <span class="stat-value" style="font-size: 20px;">${c.totalVisitas || 0}</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 24px; border-bottom: 1px solid #EEE;">
+                        <div id="tab-resumo" style="padding: 10px; color: var(--primary); border-bottom: 2px solid var(--primary); cursor:pointer">Resumo</div>
+                        <div id="tab-fotos" style="padding: 10px; color: var(--text-light); cursor:pointer" onclick="toggleClientTab('fotos', '${c.id}')">Fotos (Antes/Depois)</div>
+                    </div>
+
+                    <div id="perfil-tab-content">
+                        <div class="card" style="background: var(--bg); box-shadow: none; padding: 20px;">
+                            <p style="font-size: 14px; margin-bottom: 8px;"><strong>Alergias:</strong> ${c.alergias || 'Nenhuma informada'}</p>
+                            <p style="font-size: 14px; margin-bottom: 8px;"><strong>Aniversário:</strong> ${c.nascimento || 'Não informado'}</p>
+                            <p style="font-size: 14px;"><strong>Última Visita:</strong> ${c.ultimaVisita || 'Nunca'}</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 24px; padding: 16px; background: #FDFBF7; border-radius: 12px; border: 1px solid #EEE;">
+                        <label style="font-size: 11px; color: var(--text-light); text-transform: uppercase; font-weight: 700;">Link do Portal / Ficha</label>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <input type="text" id="portal-link-${c.id}" class="form-control" readonly value="${window.location.href.split('#')[0]}#ficha?id=${c.linkId}" style="font-size: 12px; height: 38px;">
+                            <button class="btn btn-primary" style="padding: 0 15px; height: 38px;" onclick="copiarLinkPortal('${c.id}')">
+                                <i data-lucide="copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; gap: 12px; margin-top: 24px;">
+                        <button class="btn btn-primary" style="justify-content: center" onclick="enviarWhats('${c.whatsapp}', 'ficha', {nome: '${c.nome}', linkId: '${c.linkId}'})">
+                            <i data-lucide="message-circle"></i> Enviar pelo WhatsApp
+                        </button>
+                        <button class="btn btn-outline" style="justify-content: center" onclick="closeModal(); openModal('novo-agendamento')">Novo Agendamento</button>
+                    </div>
+                `;
+            }
+
+            lucide.createIcons();
+        }
+
+        function toggleClientTab(tab, id) {
+            const c = state.clientes.find(cli => cli.id === id);
+            const atendimentos = state.agendamentos.filter(a => a.clienteId === c.id && a.status === 'realizado').sort((a,b) => new Date(b.data) - new Date(a.data));
+            const container = document.getElementById('perfil-tab-content');
+            const tabResumo = document.getElementById('tab-resumo');
+            const tabFotos = document.getElementById('tab-fotos');
+
+            if (tab === 'fotos') {
+                tabResumo.style.color = 'var(--text-light)';
+                tabResumo.style.borderBottom = 'none';
+                tabFotos.style.color = 'var(--primary)';
+                tabFotos.style.borderBottom = '2px solid var(--primary)';
+
+                container.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        ${atendimentos.map(a => {
+                            const s = state.servicos.find(ser => ser.id === a.servicoId);
+                            const fotos = a.fotos || [];
+                            return `
+                                <div class="card" style="background: white; padding: 15px; border: 1px solid #EEE; box-shadow: none;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <div>
+                                            <div style="font-weight: 700; font-size: 14px;">${s ? s.nome : ''}</div>
+                                            <div style="font-size: 12px; color: var(--text-light)">${new Date(a.data).toLocaleDateString()}</div>
+                                        </div>
+                                        <button class="btn btn-ghost" style="padding: 5px 10px; font-size: 10px; color: var(--primary)" onclick="document.getElementById('upload-${a.id}').click()">
+                                            <i data-lucide="plus"></i> Foto
+                                        </button>
+                                        <input type="file" id="upload-${a.id}" style="display: none" accept="image/*" onchange="uploadFotoAtendimento('${a.id}', '${c.id}')">
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                                        ${fotos.map(f => `
+                                            <div style="border-radius: 8px; overflow: hidden; height: 80px; border: 1px solid #F0F0F0">
+                                                <img src="${f}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </div>
+                                        `).join('')}
+                                        ${fotos.length === 0 ? '<p style="grid-column: span 3; font-size: 11px; color: #BBB; text-align: center; padding: 10px;">Sem fotos nesta sessão.</p>' : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('') || '<p style="text-align: center; color: #999; padding: 20px;">Finalize um atendimento para anexar fotos.</p>'}
+                    </div>
+                `;
+                lucide.createIcons();
+            } else {
+                showView('clientes');
+                openModal('perfil-cliente', id);
+            }
+        }
+
+        function uploadFotoAtendimento(agId, cliId) {
+            const file = document.getElementById(`upload-${agId}`).files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const a = state.agendamentos.find(item => item.id === agId);
+                if (!a.fotos) a.fotos = [];
+                a.fotos.push(e.target.result);
+                save();
+                toggleClientTab('fotos', cliId);
+                toast('Foto anexada à sessão!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- ACTIONS ---
+        function saveNovoCliente() {
+            const nome = document.getElementById('new-cli-nome').value;
+            const tel = document.getElementById('new-cli-tel').value;
+            const nasc = document.getElementById('new-cli-nasc').value;
+            const insta = document.getElementById('new-cli-insta').value;
+
+            if (!nome || !tel) return alert('Preencha nome e WhatsApp!');
+            
+            const novo = {
+                id: 'c' + Date.now(),
+                nome: nome,
+                whatsapp: tel.replace(/\D/g, ''),
+                nascimento: nasc,
+                insta: insta,
+                fichaCompleta: false,
+                ultimaVisita: new Date().toISOString().split('T')[0],
+                totalVisitas: 0,
+                pontos: 0,
+                fotos: [],
+                linkId: Math.random().toString(36).substr(2, 6)
+            };
+            state.clientes.push(novo);
+            save();
+            closeModal();
+            showView('clientes');
+            toast('Cliente cadastrado!');
+        }
+
+        function saveNovoServico() {
+            const nome = document.getElementById('new-srv-nome').value;
+            const dur = document.getElementById('new-srv-dur').value;
+            const preco = document.getElementById('new-srv-preco').value;
+            const custo = document.getElementById('new-srv-custo').value || 0;
+            const pts = document.getElementById('new-srv-pts').value || 0;
+
+            if (!nome || !dur || !preco) return alert('Preencha todos os campos!');
+
+            const novo = {
+                id: 's' + Date.now(),
+                nome: nome,
+                duracao: parseInt(dur),
+                preco: parseFloat(preco),
+                custo: parseFloat(custo),
+                pontos: parseInt(pts)
+            };
+            state.servicos.push(novo);
+            save();
+            closeModal();
+            showView('servicos');
+            toast('Serviço adicionado!');
+        }
+
+        function excluirServico(id) {
+            if (!confirm('Tem certeza que deseja excluir este serviço?')) return;
+            state.servicos = state.servicos.filter(s => s.id !== id);
+            save();
+            showView('servicos');
+            toast('Serviço removido!');
+        }
+
+        function salvarConfigGeral() {
+            state.config.nomeClinica = document.getElementById('cfg-nome').value;
+            state.config.whatsapp = document.getElementById('cfg-whats').value;
+            save();
+            updateSidebarLogo();
+            toast('Configurações salvas!');
+        }
+
+        function updateSidebarLogo() {
+            const el = document.getElementById('sidebar-studio-name');
+            if (el) el.innerText = state.config.nomeClinica || 'BeautyFlow';
+            
+            const mobEl = document.querySelector('.mobile-header .logo');
+            if (mobEl) mobEl.innerText = state.config.nomeClinica || 'BeautyFlow';
+        }
+
+        function saveNovoAgendamento() {
+            const cliId = document.getElementById('new-age-cli').value;
+            const srvId = document.getElementById('new-age-srv').value;
+            const hora = document.getElementById('new-age-hora').value;
+            const data = document.getElementById('new-age-data').value;
+
+            const novo = {
+                id: 'a' + Date.now(),
+                clienteId: cliId,
+                servicoId: srvId,
+                hora: hora,
+                data: data,
+                status: 'pendente',
+                profissionalId: 'p1'
+            };
+            state.agendamentos.push(novo);
+            save();
+            closeModal();
+            showView('agenda');
+            toast('Agendamento criado!');
+        }
+
+        let editingTransacaoId = null;
+        
+        function setTrTipo(tipo) {
+            document.getElementById('new-tr-tipo').value = tipo;
+            document.getElementById('btn-tr-entrada').className = tipo === 'entrada' ? 'btn btn-primary' : 'btn btn-outline';
+            document.getElementById('btn-tr-saida').className = tipo === 'saida' ? 'btn btn-primary' : 'btn btn-outline';
+        }
+
+        function saveNovaTransacao() {
+            const desc = document.getElementById('new-tr-desc').value;
+            const valor = document.getElementById('new-tr-valor').value;
+            const data = document.getElementById('new-tr-data').value;
+            const tipo = document.getElementById('new-tr-tipo').value;
+
+            if (!desc || !valor) return alert('Preencha todos os campos!');
+
+            if (editingTransacaoId) {
+                const t = state.transacoes.find(item => item.id === editingTransacaoId);
+                if (t) {
+                    t.desc = desc;
+                    t.valor = parseFloat(valor);
+                    t.data = data;
+                    t.tipo = tipo;
+                }
+                editingTransacaoId = null;
+                toast('Movimentação atualizada!');
+            } else {
+                state.transacoes.push({
+                    id: 't' + Date.now(),
+                    tipo: tipo,
+                    valor: parseFloat(valor),
+                    desc: desc,
+                    data: data,
+                    fpag: 'Outros'
+                });
+                toast(tipo === 'entrada' ? 'Receita lançada!' : 'Despesa lançada!');
+            }
+            
+            save();
+            closeModal();
+            showView('caixa');
+        }
+
+        function excluirTransacao(id) {
+            if (!confirm('Tem certeza que deseja excluir esta movimentação?')) return;
+            state.transacoes = state.transacoes.filter(t => t.id !== id);
+            save();
+            showView('caixa');
+            toast('Movimentação removida!');
+        }
+
+        function saveNovoProduto() {
+            const nome = document.getElementById('new-pr-nome').value;
+            const qtd = document.getElementById('new-pr-qtd').value;
+            const min = document.getElementById('new-pr-min').value;
+
+            if (!nome) return alert('Preencha o nome do produto!');
+
+            state.produtos.push({
+                id: 'pr' + Date.now(),
+                nome: nome,
+                qtd: parseInt(qtd),
+                min: parseInt(min),
+                un: 'un',
+                cat: 'Diversos'
+            });
+            save();
+            closeModal();
+            showView('estoque');
+            toast('Produto cadastrado!');
+        }
+
+        function darBaixaEstoque(id) {
+            const p = state.produtos.find(item => item.id === id);
+            if (p && p.qtd > 0) {
+                p.qtd--;
+                save();
+                showView('estoque');
+                toast('Baixa realizada!');
+            } else {
+                toast('Estoque zerado!');
+            }
+        }
+
+        function reporEstoque(id) {
+            const p = state.produtos.find(item => item.id === id);
+            if (p) {
+                p.qtd++;
+                save();
+                showView('estoque');
+                toast('Estoque reposto!');
+            }
+        }
+
+        function marcarComoRealizado(id) {
+            const a = state.agendamentos.find(item => item.id === id);
+            const s = state.servicos.find(ser => ser.id === a.servicoId);
+            const c = state.clientes.find(cli => cli.id === a.clienteId);
+            
+            a.status = 'realizado';
+            c.ultimaVisita = a.data;
+            c.totalVisitas++;
+            
+            // Fidelidade
+            if (s && s.pontos) {
+                c.pontos = (c.pontos || 0) + s.pontos;
+            }
+
+            // Lançar no caixa
+            state.transacoes.push({
+                id: 't' + Date.now(),
+                tipo: 'entrada',
+                valor: s ? s.preco : 0,
+                desc: `${s ? s.nome : 'Serviço'} - ${c.nome}`,
+                data: a.data,
+                fpag: 'Pix'
+            });
+
+            save();
+
+            // Opção de Avaliação
+            const estrelas = prompt("Finalizado! Avaliação da cliente (1-5 estrelas):", "5");
+            if (estrelas) {
+                state.avaliacoes.push({
+                    id: 'v' + Date.now(),
+                    clienteId: c.id,
+                    profissionalId: a.profissionalId,
+                    estrelas: parseInt(estrelas),
+                    data: new Date().toISOString()
+                });
+                save();
+            }
+
+            closeModal();
+            showView('dashboard');
+            toast('Atendimento finalizado com sucesso!');
+
+            if (confirm("Deseja enviar a mensagem de agradecimento com link de avaliação?")) {
+                enviarWhats(c.whatsapp, 'avaliacao', { nome: c.nome });
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+
+        function salvarTemplates() {
+            Object.keys(state.config.templates).forEach(key => {
+                const el = document.getElementById(`tpl-${key}`);
+                if (el) state.config.templates[key] = el.value;
+            });
+            save();
+            toast('Templates salvos!');
+        }
+
+        function gerarRelatorioMes() {
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth();
+            const anoAtual = hoje.getFullYear();
+
+            const transMes = state.transacoes.filter(t => {
+                const d = new Date(t.data);
+                return d.getMonth() === mesAtual && d.getFullYear() === anoAtual;
+            });
+
+            const receita = transMes.filter(t => t.tipo === 'entrada').reduce((a, b) => a + b.valor, 0);
+            const atendimentos = state.agendamentos.filter(a => {
+                const d = new Date(a.data);
+                return d.getMonth() === mesAtual && d.getFullYear() === anoAtual && a.status === 'realizado';
+            });
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Relatório Mensal - BeautyFlow</title>
+                    <style>
+                        body { font-family: 'Inter', sans-serif; padding: 40px; color: #1A1A1A; }
+                        .header { border-bottom: 2px solid #C9A84C; padding-bottom: 20px; margin-bottom: 40px; }
+                        h1 { color: #C9A84C; font-family: 'Playfair Display', serif; }
+                        .stat-box { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+                        .stat { padding: 20px; background: #FDFBF7; border-radius: 12px; }
+                        .stat-val { font-size: 24px; font-weight: 700; color: #C9A84C; }
+                        .footer { margin-top: 60px; font-size: 12px; color: #7A7A7A; border-top: 1px solid #EEE; padding-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Relatório Financeiro Mensal</h1>
+                        <p>${state.config.nomeClinica}</p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat">
+                            <div>Total de Atendimentos</div>
+                            <div class="stat-val">${atendimentos.length}</div>
+                        </div>
+                        <div class="stat">
+                            <div>Receita Bruta</div>
+                            <div class="stat-val">R$ ${receita.toFixed(2)}</div>
+                        </div>
+                        <div class="stat">
+                            <div>Ticket Médio</div>
+                            <div class="stat-val">R$ ${atendimentos.length ? (receita / atendimentos.length).toFixed(2) : '0.00'}</div>
+                        </div>
+                    </div>
+                    <div class="footer">Gerado automaticamente por BeautyFlow em ${new Date().toLocaleString()}</div>
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        function copiarLinkPortal(id) {
+            const copyText = document.getElementById(`portal-link-${id}`);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            toast('Link copiado para a área de transferência!');
+        }
+
+        function enviarWhats(tel, templateKey, data = {}) {
+            let msg = state.config.templates[templateKey] || "";
+            msg = msg.replace(/\[nome\]/g, data.nome || "");
+            msg = msg.replace(/\[dia\]/g, data.dia || "hoje");
+            msg = msg.replace(/\[hora\]/g, data.hora || "");
+            msg = msg.replace(/\[servico\]/g, data.servico || "");
+            
+            // Gerar link correto
+            const base = window.location.href.split('#')[0];
+            const finalLink = `${base}#ficha?id=${data.linkId || 'feedback'}`;
+            msg = msg.replace(/\[link\]/g, finalLink);
+            
+            window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // --- CLIENT FLOW (PORTAL) ---
+        function checkClientRoute() {
+            if (window.location.hash.startsWith('#ficha')) {
+                document.getElementById('app').style.display = 'none';
+                document.getElementById('client-view').style.display = 'block';
+                
+                const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+                const id = urlParams.get('id');
+                const c = state.clientes.find(cli => cli.linkId === id);
+
+                if (c) {
+                    if (c.fichaCompleta) {
+                        renderPortalCliente(c);
+                    } else {
+                        renderFichaStep(1, c);
+                    }
+                } else {
+                    document.getElementById('client-steps-container').innerHTML = '<h2>Link Inválido</h2>';
+                }
+            }
+        }
+
+        function renderPortalCliente(c, activeTab = 'resumo') {
+            const container = document.getElementById('client-steps-container');
+            const atendimentos = state.agendamentos.filter(a => a.clienteId === c.id && a.status === 'realizado').sort((a,b) => new Date(b.data) - new Date(a.data));
+            
+            container.innerHTML = `
+                <div class="step-card" style="max-width: 500px; text-align: left; padding: 0; overflow: hidden; border-radius: 30px;">
+                    <!-- Header Portal -->
+                    <div style="background: var(--sidebar-bg); padding: 40px 30px; color: white;">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                            <div class="avatar" style="margin:0; border: 2px solid var(--primary);">${c.nome[0]}</div>
+                            <div>
+                                <h2 style="margin:0; color: var(--primary);">Olá, ${c.nome.split(' ')[0]}!</h2>
+                                <p style="font-size: 13px; opacity: 0.7;">Seu espaço exclusivo BeautyFlow</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                            <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Fidelidade Acumulada</span>
+                            <div style="font-size: 28px; font-weight: 700; color: var(--primary); margin-top: 5px;">${c.pontos || 0} <span style="font-size: 14px; font-weight: 400;">pontos</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs Nav -->
+                    <div style="display: flex; background: white; border-bottom: 1px solid #EEE; overflow-x: auto;">
+                        <div onclick="renderPortalCliente(state.clientes.find(cli => cli.id === '${c.id}'), 'resumo')" style="flex: 1; min-width: 80px; padding: 15px; text-align: center; font-size: 12px; font-weight: 600; cursor:pointer; color: ${activeTab === 'resumo' ? 'var(--primary)' : '#999'}; border-bottom: 3px solid ${activeTab === 'resumo' ? 'var(--primary)' : 'transparent'}">Resumo</div>
+                        <div onclick="renderPortalCliente(state.clientes.find(cli => cli.id === '${c.id}'), 'agendar')" style="flex: 1; min-width: 80px; padding: 15px; text-align: center; font-size: 12px; font-weight: 600; cursor:pointer; color: ${activeTab === 'agendar' ? 'var(--primary)' : '#999'}; border-bottom: 3px solid ${activeTab === 'agendar' ? 'var(--primary)' : 'transparent'}">Agendar</div>
+                        <div onclick="renderPortalCliente(state.clientes.find(cli => cli.id === '${c.id}'), 'historico')" style="flex: 1; min-width: 80px; padding: 15px; text-align: center; font-size: 12px; font-weight: 600; cursor:pointer; color: ${activeTab === 'historico' ? 'var(--primary)' : '#999'}; border-bottom: 3px solid ${activeTab === 'historico' ? 'var(--primary)' : 'transparent'}">Histórico</div>
+                        <div onclick="renderPortalCliente(state.clientes.find(cli => cli.id === '${c.id}'), 'galeria')" style="flex: 1; min-width: 80px; padding: 15px; text-align: center; font-size: 12px; font-weight: 600; cursor:pointer; color: ${activeTab === 'galeria' ? 'var(--primary)' : '#999'}; border-bottom: 3px solid ${activeTab === 'galeria' ? 'var(--primary)' : 'transparent'}">Galeria</div>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div style="padding: 30px; min-height: 350px; background: #FDFBF7;">
+                        ${activeTab === 'resumo' ? `
+                            <h3 style="font-size: 16px; margin-bottom: 15px;">Suas Informações</h3>
+                            <div class="card" style="padding: 20px; box-shadow: none; border: 1px solid #EEE;">
+                                <div style="margin-bottom: 12px; font-size: 14px;"><strong>Próximo Aniversário:</strong> ${c.nascimento ? new Date(c.nascimento).toLocaleDateString('pt-BR', {day:'numeric', month:'long'}) : 'Não informado'}</div>
+                                <div style="margin-bottom: 12px; font-size: 14px;"><strong>Instagram:</strong> ${c.insta || '-'}</div>
+                                <div style="font-size: 14px;"><strong>Alergias/Observações:</strong><br><span style="color: var(--text-light)">${c.alergias || 'Nenhuma informada.'}</span></div>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="renderPortalCliente(state.clientes.find(cli => cli.id === '${c.id}'), 'agendar')">Agendar Novo Horário</button>
+                        ` : ''}
+
+                        ${activeTab === 'agendar' ? `
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <h3 style="font-size: 16px;">Novo Agendamento</h3>
+                                <div class="form-group">
+                                    <label>Escolha o Serviço</label>
+                                    <select id="self-srv" class="form-control" onchange="updateAvailableSlots()">
+                                        <option value="">Selecione...</option>
+                                        ${state.servicos.map(s => `<option value="${s.id}">${s.nome} — R$ ${s.preco.toFixed(2)}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Escolha a Data</label>
+                                    <input type="date" id="self-date" class="form-control" min="${new Date().toISOString().split('T')[0]}" onchange="updateAvailableSlots()">
+                                </div>
+                                <div id="self-slots-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                    <p style="grid-column: span 3; font-size: 12px; color: #999; text-align: center;">Selecione o serviço e a data acima.</p>
+                                </div>
+                                <button id="btn-self-confirm" class="btn btn-primary" style="width: 100%; margin-top: 10px; display: none;" onclick="confirmSelfBooking('${c.id}')">Confirmar Horário</button>
+                            </div>
+                        ` : ''}
+
+                        ${activeTab === 'historico' ? `
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                ${atendimentos.map(a => {
+                                    const s = state.servicos.find(ser => ser.id === a.servicoId);
+                                    return `
+                                        <div class="card" style="padding: 15px; box-shadow: none; border: 1px solid #EEE;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <div>
+                                                    <div style="font-weight: 700; font-size: 15px;">${s ? s.nome : 'Serviço'}</div>
+                                                    <div style="font-size: 12px; color: var(--text-light)">${new Date(a.data).toLocaleDateString()}</div>
+                                                </div>
+                                                <div style="font-weight: 700; color: var(--primary)">+${s ? s.pontos : 0} pts</div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('') || '<p style="text-align: center; color: #999;">Ainda não há atendimentos realizados.</p>'}
+                            </div>
+                        ` : ''}
+
+                        ${activeTab === 'galeria' ? `
+                            <div style="display: flex; flex-direction: column; gap: 24px;">
+                                ${atendimentos.map(a => {
+                                    const s = state.servicos.find(ser => ser.id === a.servicoId);
+                                    const fotosAtendimento = a.fotos || [];
+                                    if (fotosAtendimento.length === 0) return '';
+                                    return `
+                                        <div>
+                                            <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--text-light)">${new Date(a.data).toLocaleDateString()} — ${s ? s.nome : ''}</h4>
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                                ${fotosAtendimento.map(f => `
+                                                    <div style="border-radius: 12px; overflow: hidden; height: 150px; border: 1px solid #EEE;">
+                                                        <img src="${f}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('') || '<p style="text-align: center; color: #999;">Suas fotos de evolução aparecerão aqui conforme realizarmos os atendimentos.</p>'}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div style="padding: 20px; text-align: center;">
+                        <button class="btn btn-ghost" style="font-size: 12px;" onclick="window.location.hash=''">Sair do Portal</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        let selectedSlot = null;
+        function updateAvailableSlots() {
+            const date = document.getElementById('self-date').value;
+            const srvId = document.getElementById('self-srv').value;
+            const container = document.getElementById('self-slots-container');
+            const btnConfirm = document.getElementById('btn-self-confirm');
+
+            if (!date || !srvId) return;
+
+            const baseSlots = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30"];
+            const bookedSlots = state.agendamentos.filter(a => a.data === date && a.status !== 'cancelado').map(a => a.hora);
+            
+            const freeSlots = baseSlots.filter(s => !bookedSlots.includes(s));
+
+            container.innerHTML = freeSlots.map(s => `
+                <div class="slot-btn" onclick="selectSlot(this, '${s}')" style="padding: 10px; border: 1px solid #EEE; border-radius: 10px; text-align: center; font-size: 13px; cursor:pointer; background: white;">${s}</div>
+            `).join('') || '<p style="grid-column: span 3; text-align: center; color: var(--danger); font-size: 12px;">Nenhum horário disponível para este dia.</p>';
+            
+            selectedSlot = null;
+            btnConfirm.style.display = 'none';
+        }
+
+        function selectSlot(el, slot) {
+            document.querySelectorAll('.slot-btn').forEach(b => {
+                b.style.background = 'white';
+                b.style.color = 'var(--text-main)';
+                b.style.borderColor = '#EEE';
+            });
+            el.style.background = 'var(--primary)';
+            el.style.color = 'white';
+            el.style.borderColor = 'var(--primary)';
+            selectedSlot = slot;
+            document.getElementById('btn-self-confirm').style.display = 'block';
+        }
+
+        function confirmSelfBooking(cliId) {
+            const srvId = document.getElementById('self-srv').value;
+            const date = document.getElementById('self-date').value;
+            const s = state.servicos.find(ser => ser.id === srvId);
+
+            if (!selectedSlot) return;
+
+            const novo = {
+                id: 'a' + Date.now(),
+                clienteId: cliId,
+                servicoId: srvId,
+                hora: selectedSlot,
+                data: date,
+                status: 'pendente',
+                profissionalId: 'p1',
+                fotos: []
+            };
+
+            state.agendamentos.push(novo);
+            save();
+            
+            alert(`Tudo certo! Seu agendamento de ${s.nome} foi marcado para o dia ${new Date(date).toLocaleDateString()} às ${selectedSlot}.✨`);
+            renderPortalCliente(state.clientes.find(cli => cli.id === cliId), 'historico');
+        }
+
+        let fichaData = { step: 1, currentClient: null };
+        function renderFichaStep(step, client) {
+            fichaData.currentClient = client || fichaData.currentClient;
+            const container = document.getElementById('client-steps-container');
+            if (step === 1) {
+                container.innerHTML = `
+                    <div class="step-card">
+                        <div class="logo" style="justify-content: center; margin-bottom: 20px;">BeautyFlow</div>
+                        <div class="step-indicator">
+                            <div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div>
+                        </div>
+                        <h2>Olá, ${fichaData.currentClient.nome.split(' ')[0]}! ✨</h2>
+                        <p style="color: var(--text-light); margin-bottom: 24px;">Complete sua ficha para um atendimento personalizado.</p>
+                        <div class="form-group" style="text-align: left;">
+                            <label>Data de Nascimento</label>
+                            <input type="date" id="ficha-nasc" class="form-control" value="${fichaData.currentClient.nascimento || ''}">
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label>Instagram (@usuario)</label>
+                            <input type="text" id="ficha-insta" class="form-control" placeholder="@" value="${fichaData.currentClient.insta || ''}">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;" onclick="saveFichaStep(1)">Continuar</button>
+                    </div>
+                `;
+            } else if (step === 2) {
+                container.innerHTML = `
+                    <div class="step-card">
+                        <div class="step-indicator">
+                            <div class="step-dot"></div><div class="step-dot active"></div><div class="step-dot"></div>
+                        </div>
+                        <h2>Alergias ou Condições?</h2>
+                        <p style="color: var(--text-light); margin-bottom: 24px;">Importante para sua segurança.</p>
+                        <textarea id="ficha-alergias" class="form-control" rows="4" placeholder="Ex: Alergia a iodo, gestante, pele sensível...">${fichaData.currentClient.alergias || ''}</textarea>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 32px;" onclick="saveFichaStep(2)">Finalizar e Entrar no Portal</button>
+                    </div>
+                `;
+            }
+        }
+
+        function saveFichaStep(step) {
+            const c = state.clientes.find(cli => cli.id === fichaData.currentClient.id);
+            if (step === 1) {
+                c.nascimento = document.getElementById('ficha-nasc').value;
+                c.insta = document.getElementById('ficha-insta').value;
+                renderFichaStep(2);
+            } else if (step === 2) {
+                c.alergias = document.getElementById('ficha-alergias').value;
+                c.fichaCompleta = true;
+                save();
+                renderPortalCliente(c);
+            }
+        }
+
+        function selectChoice(el) {
+            document.querySelectorAll('.choice-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+        }
+
+        // Close sidebar when clicking menu item on mobile
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    document.getElementById('sidebar').classList.remove('active');
+                    document.getElementById('sidebar-overlay').style.display = 'none';
+                }
+            });
+        });
+
+        // --- INIT ---
+        window.onload = () => {
+            initData();
+            updateSidebarLogo();
+            checkClientRoute();
+            if (!window.location.hash.startsWith('#ficha')) {
+                showView('dashboard');
+            }
+        };
+
+        window.onhashchange = () => {
+            if (window.location.hash === '') window.location.reload();
+            checkClientRoute();
+        };
+
+        // Modal close on ESC
+        window.onkeydown = (e) => {
+            if (e.key === 'Escape') closeModal();
+        };
+    </script>
+</body>
+</html>

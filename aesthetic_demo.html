@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Tech - Dashboard Estética</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark: #0A0A0F;
+            --accent: #4F6EF7;
+            --green: #34D399;
+            --purple: #7C3AED;
+            --text: #E8E8F0;
+            --muted: #888899;
+            --border: rgba(255,255,255,0.07);
+            --card: rgba(255,255,255,0.04);
+        }
+        body {
+            background: var(--dark);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .dashboard {
+            width: 100%;
+            max-width: 900px;
+            background: #12121A;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+        .logo span { color: var(--accent); }
+        .badge {
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            color: var(--green);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .metric-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .metric-val {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .metric-label { color: var(--muted); font-size: 0.9rem; font-weight: 500; }
+        .trend { font-size: 0.8rem; margin-top: 0.5rem; display: block; }
+        .trend.up { color: var(--green); }
+
+        .charts {
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem;
+        }
+        .chart-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+        }
+        .chart-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; margin-bottom: 1.5rem; display: block; }
+        .agenda-item {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 0.75rem; border-bottom: 1px solid var(--border);
+        }
+        .agenda-item:last-child { border-bottom: none; }
+        .time { font-weight: 700; color: var(--accent); min-width: 50px; }
+        .client { flex: 1; font-weight: 500; }
+        .status { font-size: 0.75rem; background: rgba(52, 211, 153, 0.1); color: var(--green); padding: 0.2rem 0.6rem; border-radius: 4px; }
+
+        .glow {
+            position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(79, 110, 247, 0.1) 0%, transparent 70%);
+            top: -150px; right: -150px;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="glow"></div>
+    <div class="dashboard">
+        <header>
+            <div class="logo">Prime<span>Tech</span> — Aesthetic</div>
+            <div class="badge">● Sistema em Operação</div>
+        </header>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <span class="metric-val" style="color: var(--green);">R$ 48.520</span>
+                <span class="metric-label">Faturamento Mensal</span>
+                <span class="trend up">↑ 32% vs mês anterior</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-val" style="color: #60A5FA;">94%</span>
+                <span class="metric-label">Taxa de Retorno</span>
+                <span class="trend up">↑ Fidelização máxima</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-val" style="color: var(--purple);">22h</span>
+                <span class="metric-label">Tempo Economizado/Sem</span>
+                <span class="trend up">↑ Automação WhatsApp</span>
+            </div>
+        </div>
+
+        <div class="charts">
+            <div class="chart-box">
+                <span class="chart-title">Próximos Procedimentos (Hoje)</span>
+                <div class="agenda-item">
+                    <span class="time">14:00</span>
+                    <span class="client">Ana Paula — Botox Full Face</span>
+                    <span class="status">Confirmado ✅</span>
+                </div>
+                <div class="agenda-item">
+                    <span class="time">15:30</span>
+                    <span class="client">Mariana Silva — Preenchimento Labial</span>
+                    <span class="status">Confirmado ✅</span>
+                </div>
+                <div class="agenda-item">
+                    <span class="time">17:00</span>
+                    <span class="client">Beatriz Costa — Bioestimulador</span>
+                    <span class="status">Confirmado ✅</span>
+                </div>
+            </div>
+            <div class="chart-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔥</div>
+                <span class="chart-title">Conversão de Leads</span>
+                <span style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">88%</span>
+                <span class="metric-label">de cliques viram agendamento</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

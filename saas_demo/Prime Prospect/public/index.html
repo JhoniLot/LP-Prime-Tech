@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; img-src * data:; font-src *;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Prospect | Command Center</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050507;
+            --sidebar: #0f0f13;
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.2);
+            --card: #15151e;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+
+        aside { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 30px 20px; }
+        .logo { font-size: 1.5rem; font-weight: 800; margin-bottom: 50px; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        nav ul { list-style: none; }
+        nav li { padding: 15px; border-radius: 12px; cursor: pointer; color: var(--text-dim); transition: 0.3s; margin-bottom: 5px; font-weight: 500; }
+        nav li.active, nav li:hover { background: var(--accent-glow); color: var(--accent); }
+
+        main { flex: 1; padding: 40px; overflow-y: scroll; height: 100vh; }
+        .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+        .kpi-card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); }
+        .kpi-card span { color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .kpi-card h2 { font-size: 2rem; margin-top: 10px; font-weight: 700; }
+
+        .search-area { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid var(--border); margin-bottom: 30px; }
+        .flex-row { display: flex; gap: 15px; align-items: center; }
+        select, input { background: #000; border: 1px solid var(--border); color: white; padding: 15px; border-radius: 12px; outline: none; }
+        input { flex: 1; }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
+
+        .leads-table { width: 100%; border-collapse: collapse; }
+        .leads-table th { text-align: left; color: var(--text-dim); padding: 15px; font-size: 0.85rem; border-bottom: 1px solid var(--border); }
+        .leads-table td { padding: 20px 15px; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--card); width: 90%; max-width: 650px; padding: 40px; border-radius: 30px; border: 1px solid var(--border); position: relative; }
+        textarea { width: 100%; height: 300px; background: #000; border: 1px solid var(--border); color: #ddd; padding: 20px; border-radius: 15px; margin: 20px 0; resize: none; font-size: 1rem; line-height: 1.6; }
+
+        .loader { display: none; margin: 20px 0; text-align: center; color: var(--accent); font-weight: 600; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .pulse { animation: pulse 1.5s infinite; }
+
+        .kanban-board { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; min-height: 600px; }
+        .kanban-column { background: rgba(15, 15, 19, 0.5); min-width: 280px; border-radius: 16px; border: 1px solid var(--border); padding: 15px; }
+        .kanban-column h3 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 20px; text-align: center; }
+        .kanban-cards { display: flex; flex-direction: column; gap: 12px; }
+        .kanban-card { background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); transition: 0.2s; }
+        .kanban-card h4 { font-size: 0.9rem; margin-bottom: 5px; color: #fff; }
+        .kanban-card p { font-size: 0.7rem; color: var(--text-dim); }
+        .kanban-card .move-btns { display: flex; gap: 5px; margin-top: 15px; }
+        .move-btns button { flex: 1; font-size: 10px; padding: 6px; background: #222; color: #fff; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .move-btns button:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="logo">PRIME PROSPECT</div>
+        <nav>
+            <ul>
+                <li class="active" onclick="switchView('Dashboard')">Dashboard</li>
+                <li onclick="switchView('Leads Capturados')">Leads Capturados</li>
+                <li onclick="switchView('CRM (Kanban)')">CRM (Kanban)</li>
+                <li onclick="switchView('Campanhas')">Campanhas</li>
+                <li onclick="switchView('Configurações')">Configurações</li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <!-- VIEW: DASHBOARD -->
+        <div id="view-dashboard" class="view">
+            <div class="kpis">
+                <div class="kpi-card"><span>Total Leads</span><h2 id="stat-total">--</h2></div>
+                <div class="kpi-card"><span>Leads Hoje</span><h2 id="stat-today">--</h2></div>
+                <div class="kpi-card"><span>Searches</span><h2 id="stat-searches">--</h2></div>
+                <div class="kpi-card"><span>IA Status</span><h2 style="color:#22c55e;">ONLINE</h2></div>
+            </div>
+            <div class="search-area">
+                <div class="flex-row">
+                    <select id="software-niche">
+                        <optgroup label="🏥 Estética & Saúde">
+                            <option value="clínica de estética">Clínicas de Estética</option>
+                            <option value="estética avançada">Estética Avançada</option>
+                            <option value="harmonização facial">Harmonização Facial</option>
+                            <option value="dermatologista">Dermatologistas</option>
+                            <option value="clínica de depilação">Clínicas de Depilação</option>
+                        </optgroup>
+                        <optgroup label="💼 Profissional">
+                            <option value="escritório de contabilidade">Escritórios de Contabilidade</option>
+                            <option value="escritório de advocacia">Escritórios de Advocacia</option>
+                            <option value="loja de roupas">Lojas de Roupas / Comércio</option>
+                        </optgroup>
+                    </select>
+                    <input type="text" id="city" placeholder="Cidade..." value="São Paulo">
+                    <input type="number" id="limit" placeholder="Qtd" value="10" style="max-width: 80px; background: #000; border: 1px solid var(--border); color: white; padding: 15px; border-radius: 12px; outline: none;">
+                    <button class="btn-primary" id="search-btn">🚀 Iniciar</button>
+                </div>
+                <div id="loader" class="loader pulse">Buscando leads reais...</div>
+            </div>
+            <div style="background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border);">
+                <table class="leads-table">
+                    <thead><tr><th>EMPRESA</th><th>LOCALIZAÇÃO</th><th>SITE</th><th>NOTA</th><th>STATUS</th><th>AÇÕES</th></tr></thead>
+                    <tbody id="search-results-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: LEADS CAPTURADOS -->
+        <div id="view-leads" class="view" style="display:none;">
+            <div style="background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border);">
+                <h2 style="margin-bottom: 20px;">Histórico de Captura</h2>
+                <table class="leads-table">
+                    <thead><tr><th>EMPRESA</th><th>LOCALIZAÇÃO</th><th>SITE</th><th>NOTA</th><th>STATUS</th><th>AÇÕES</th></tr></thead>
+                    <tbody id="history-leads-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: CRM KANBAN -->
+        <div id="view-crm" class="view" style="display:none;">
+            <div class="kanban-board">
+                <div class="kanban-column" data-status="Leads novos"><h3>Leads Novos</h3><div class="kanban-cards"></div></div>
+                <div class="kanban-column" data-status="Mensagem enviada"><h3>Enviado</h3><div class="kanban-cards"></div></div>
+                <div class="kanban-column" data-status="Não respondido"><h3>Não Resp.</h3><div class="kanban-cards"></div></div>
+                <div class="kanban-column" data-status="Agendado"><h3>Agendado</h3><div class="kanban-cards"></div></div>
+                <div class="kanban-column" data-status="Em produção"><h3>Em Produção</h3><div class="kanban-cards"></div></div>
+                <div class="kanban-column" data-status="Entregue"><h3>Entregue</h3><div class="kanban-cards"></div></div>
+            </div>
+        </div>
+
+        <!-- VIEW: CONFIGURAÇÕES -->
+        <div id="view-config" class="view" style="display:none;">
+            <div style="background: var(--card); border-radius: 20px; padding: 40px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; text-align: center;">
+                <h2 style="margin-bottom: 20px;">Integração WhatsApp Bot</h2>
+                <p style="color: var(--text-dim); margin-bottom: 30px;">
+                    O Prime Prospect possui um agente autônomo que usa seu WhatsApp para conversar com os leads. 
+                    Escaneie o QR Code abaixo para conectar.
+                </p>
+                
+                <div id="wa-status-badge" style="display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: 700; margin-bottom: 20px; background: #333;">VERIFICANDO...</div>
+                
+                <div id="wa-qr-container" style="display: none; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; width: fit-content;">
+                    <img id="wa-qr-img" src="" alt="WhatsApp QR Code" style="width: 250px; height: 250px;">
+                </div>
+                
+                <p id="wa-instructions" style="display: none; margin-top: 15px; color: #aaa;">
+                    1. Abra o WhatsApp no seu celular<br>
+                    2. Toque em Mais opções ou Configurações<br>
+                    3. Toque em Aparelhos conectados > Conectar um aparelho<br>
+                    4. Aponte a câmera para esta tela
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Copy Personalizada</h2>
+            <p id="modal-lead-name" style="color:var(--accent);"></p>
+            <textarea id="proposal-text"></textarea>
+            <div class="flex-row">
+                <button onclick="copyText()" style="flex:1; background:#222; color:#fff; border-radius:10px; padding:15px; border:1px solid var(--border); cursor:pointer;">Copiar</button>
+                <button id="wa-btn" onclick="sendWhatsApp()" style="flex:2; background:#25d366; color:#fff; border-radius:10px; padding:15px; border:none; cursor:pointer; font-weight:700;">📲 Enviar WhatsApp</button>
+                <button onclick="closeModal()" style="color:var(--text-dim); background:none; border:none; cursor:pointer;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchBtn = document.getElementById('search-btn');
+        const softwareNiche = document.getElementById('software-niche');
+        const cityInput = document.getElementById('city');
+        const searchResultsBody = document.getElementById('search-results-body');
+        const historyLeadsBody = document.getElementById('history-leads-body');
+        const loader = document.getElementById('loader');
+        
+        let currentPersona = 'estética';
+        let currentLeadPhone = "";
+        let currentLeadId = "";
+
+        function switchView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+            document.querySelectorAll('aside nav li').forEach(li => li.classList.remove('active'));
+            
+            if (viewName === 'Dashboard') {
+                document.getElementById('view-dashboard').style.display = 'block';
+                document.querySelector('aside nav li:nth-child(1)').classList.add('active');
+                updateStats();
+            } else if (viewName === 'Leads Capturados') {
+                document.getElementById('view-leads').style.display = 'block';
+                document.querySelector('aside nav li:nth-child(2)').classList.add('active');
+                loadLeads('all');
+            } else if (viewName === 'CRM (Kanban)') {
+                document.getElementById('view-crm').style.display = 'block';
+                document.querySelector('aside nav li:nth-child(3)').classList.add('active');
+                loadKanban();
+            } else if (viewName === 'Configurações') {
+                document.getElementById('view-config').style.display = 'block';
+                document.querySelector('aside nav li:nth-child(5)').classList.add('active');
+                pollWhatsAppStatus();
+            }
+        }
+        
+        let waPollInterval = null;
+        
+        async function pollWhatsAppStatus() {
+            // Limpa intervalo anterior se existir
+            if (waPollInterval) clearInterval(waPollInterval);
+            
+            const checkStatus = async () => {
+                // Só continua checando se a view estiver aberta
+                if (document.getElementById('view-config').style.display === 'none') {
+                    clearInterval(waPollInterval);
+                    return;
+                }
+                
+                try {
+                    const res = await fetch('/api/whatsapp/status');
+                    const data = await res.json();
+                    
+                    const badge = document.getElementById('wa-status-badge');
+                    const qrContainer = document.getElementById('wa-qr-container');
+                    const instructions = document.getElementById('wa-instructions');
+                    const qrImg = document.getElementById('wa-qr-img');
+                    
+                    if (data.status === 'CONNECTED') {
+                        badge.innerText = '🟢 CONECTADO';
+                        badge.style.background = 'rgba(34, 197, 94, 0.2)';
+                        badge.style.color = '#22c55e';
+                        qrContainer.style.display = 'none';
+                        instructions.style.display = 'none';
+                    } else if (data.status === 'QR_READY' && data.qrCode) {
+                        badge.innerText = '🟡 AGUARDANDO QR CODE';
+                        badge.style.background = 'rgba(234, 179, 8, 0.2)';
+                        badge.style.color = '#eab308';
+                        qrContainer.style.display = 'block';
+                        instructions.style.display = 'block';
+                        qrImg.src = data.qrCode;
+                    } else {
+                        badge.innerText = '🔴 DESCONECTADO (Inicializando...)';
+                        badge.style.background = 'rgba(239, 68, 68, 0.2)';
+                        badge.style.color = '#ef4444';
+                        qrContainer.style.display = 'none';
+                        instructions.style.display = 'none';
+                    }
+                } catch(e) {
+                    console.error("Erro ao checar status do WPP", e);
+                }
+            };
+            
+            // Checa agora e depois a cada 3 segundos
+            checkStatus();
+            waPollInterval = setInterval(checkStatus, 3000);
+        }
+
+        async function updateStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                document.getElementById('stat-total').innerText = data.totalLeads;
+                document.getElementById('stat-today').innerText = data.leadsToday;
+                document.getElementById('stat-searches').innerText = data.searches === 'N/A' ? '0' : data.searches;
+            } catch(e){}
+        }
+
+        async function loadLeads(niche = 'all') {
+            try {
+                const response = await fetch(`/api/leads?persona=${niche}`);
+                const leads = await response.json();
+                renderTable(historyLeadsBody, leads);
+            } catch(e){}
+        }
+
+        async function loadKanban() {
+            try {
+                const response = await fetch('/api/leads');
+                const leads = await response.json();
+                document.querySelectorAll('.kanban-cards').forEach(c => c.innerHTML = '');
+                
+                leads.forEach(lead => {
+                    const status = lead.status || 'Leads novos';
+                    const col = document.querySelector(`.kanban-column[data-status="${status}"] .kanban-cards`);
+                    if (col) {
+                        const card = document.createElement('div');
+                        card.className = 'kanban-card';
+                        card.innerHTML = `
+                            <h4>${lead.name}</h4>
+                            <p>${lead.address || ''}</p>
+                            <div class="move-btns">
+                                <button onclick="updateStatus('${lead.id}', 'Leads novos')">💡 Novo</button>
+                                <button onclick="updateStatus('${lead.id}', 'Agendado')">📅 Agend.</button>
+                                <button onclick="updateStatus('${lead.id}', 'Entregue')">✅ Entr.</button>
+                            </div>
+                        `;
+                        col.appendChild(card);
+                    }
+                });
+            } catch(e){}
+        }
+
+        function renderTable(container, leads) {
+            container.innerHTML = '';
+            if (!leads || leads.length === 0) {
+                container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-dim);">Nenhum lead no banco de dados.</td></tr>';
+                return;
+            }
+            leads.forEach(lead => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600;">${lead.name}</td>
+                    <td style="color:var(--text-dim);">${lead.address || 'N/A'}</td>
+                    <td>
+                        ${lead.website ? `<a href="${lead.website}" target="_blank" style="color:var(--accent); text-decoration:none;"><i data-lucide="external-link"></i> Abrir Site</a>` : '<span style="color:#666">Sem site</span>'}
+                    </td>
+                    <td><b style="color:#fbbf24;">${lead.rating || '---'}</b></td>
+                    <td><span class="status-badge">${(lead.status || 'Leads novos').toUpperCase()}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <button onclick='openAI(${JSON.stringify(lead)})' style="background:var(--accent); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.75rem;">Copy</button>
+                            <button onclick='runDeepSearch("${lead.id}", "${lead.name}", "${lead.address}")' style="background:#222; color:#fff; border:1px solid var(--border); padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.75rem;">🔍 Deep</button>
+                        </div>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        async function runDeepSearch(id, name, city) {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Searching...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/deep-search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, name, city })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(`Sucesso! Encontramos um novo contato: ${data.phone}`);
+                    loadLeads('all');
+                } else {
+                    alert("Busca profunda concluída, mas nenhum novo celular foi detectado no Google/Redes Sociais.");
+                }
+            } catch(e) {
+                alert("Erro na busca profunda.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function updateStatus(id, newStatus) {
+            try {
+                await fetch('/api/leads/status', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, status: newStatus })
+                });
+                loadKanban();
+            } catch(e){}
+        }
+
+        const limitInput = document.getElementById('limit');
+
+        searchBtn.addEventListener('click', async () => {
+            const niche = softwareNiche.value;
+            const city = cityInput.value;
+            const limit = limitInput.value || 10;
+            searchBtn.disabled = true;
+            loader.style.display = 'block';
+            searchResultsBody.innerHTML = '';
+
+            try {
+                const response = await fetch(`/api/search?niche=${encodeURIComponent(niche)}&city=${encodeURIComponent(city)}&limit=${limit}`);
+                const leads = await response.json();
+                renderTable(searchResultsBody, leads);
+                updateStats();
+            } catch (err) {
+                alert("Erro na busca!");
+            } finally {
+                searchBtn.disabled = false;
+                loader.style.display = 'none';
+            }
+        });
+
+        async function openAI(lead) {
+            currentLeadId = lead.id;
+            currentLeadPhone = lead.phone || "";
+            
+            // Atualiza o botão de WhatsApp para mostrar se tem número
+            const waBtn = document.getElementById('wa-btn');
+            if (currentLeadPhone) {
+                waBtn.innerHTML = `📲 Enviar para ${currentLeadPhone}`;
+                waBtn.style.background = '#25d366';
+            } else {
+                waBtn.innerHTML = `📋 Enviar (escolher contato)`;
+                waBtn.style.background = '#1a8a44';
+            }
+            
+            document.getElementById('modal-lead-name').innerText = lead.name;
+            document.getElementById('proposal-text').value = "⏳ IA personalizando a abordagem...";
+            document.getElementById('modal').style.display = 'flex';
+            try {
+                const res = await fetch('/api/personalize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lead, persona: softwareNiche.value })
+                });
+                const data = await res.json();
+                document.getElementById('proposal-text').value = data.proposal;
+            } catch(e){}
+        }
+
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function copyText() { navigator.clipboard.writeText(document.getElementById('proposal-text').value); alert("Copiado!"); }
+
+        async function sendWhatsApp() {
+            const btn = document.getElementById('wa-btn');
+            const originalText = btn.innerHTML;
+            const text = document.getElementById('proposal-text').value;
+            let phone = (currentLeadPhone || "").replace(/\D/g, '');
+            
+            if (phone.length < 10) {
+                alert("Este lead não possui um número de telefone válido cadastrado.");
+                return;
+            }
+
+            btn.innerHTML = '⏳ Enviando pelo Robô...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/whatsapp/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, text, id: currentLeadId })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    alert("Mensagem enviada com sucesso! O robô agora assumirá a conversa se o lead responder.");
+                    closeModal();
+                    loadLeads('all');
+                    if (document.getElementById('view-crm').style.display !== 'none') loadKanban();
+                } else {
+                    alert("Erro ao enviar: " + data.error);
+                }
+            } catch(e) {
+                alert("Falha de conexão com o robô.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        updateStats();
+    </script>
+</body>
+</html>
