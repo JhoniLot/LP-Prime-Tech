@@ -33,6 +33,9 @@
   .nav-cta{background:var(--accent);color:#fff;padding:0.6rem 1.4rem;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:500;transition:opacity 0.2s}
   .nav-cta:hover{opacity:0.85}
 
+  .menu-toggle{display:none;background:transparent;border:none;color:#fff;cursor:pointer;padding:0.5rem}
+  .menu-toggle svg{width:28px;height:28px}
+
   /* HERO */
   .hero{min-height:100vh;display:flex;align-items:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
   .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 30%, rgba(79,110,247,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 20% 70%, rgba(124,58,237,0.08) 0%, transparent 60%)}
@@ -229,10 +232,11 @@
     .niches-grid{grid-template-columns:repeat(2,1fr)}
     .diff-inner{grid-template-columns:1fr}
     .process-steps{grid-template-columns:repeat(2,1fr)}
-    .testi-grid{grid-template-columns:1fr}
-    .invest-losses{grid-template-columns:1fr}
-    .invest-main{grid-template-columns:1fr}
-    .nav-links{display:none}
+    .nav-links{display:none;position:fixed;top:72px;left:0;right:0;bottom:0;background:var(--dark);flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;padding:2rem;z-index:99;backdrop-filter:blur(20px)}
+    .nav-links.active{display:flex}
+    .nav-links a{font-size:1.2rem;color:#fff}
+    .menu-toggle{display:block}
+    .nav-cta{display:none}
   }
 </style>
 </head>
@@ -242,13 +246,16 @@
 <nav>
   <a href="#" class="nav-logo">Prime<span>Tech</span></a>
   <ul class="nav-links">
-    <li><a href="#como-funciona">Como funciona</a></li>
-    <li><a href="#segmentos">Segmentos</a></li>
-    <li><a href="#diferenciais">Diferenciais</a></li>
-    <li><a href="#precos">Preços</a></li>
-    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#como-funciona" onclick="toggleMenu()">Como funciona</a></li>
+    <li><a href="#segmentos" onclick="toggleMenu()">Segmentos</a></li>
+    <li><a href="#diferenciais" onclick="toggleMenu()">Diferenciais</a></li>
+    <li><a href="#precos" onclick="toggleMenu()">Preços</a></li>
+    <li><a href="#faq" onclick="toggleMenu()">FAQ</a></li>
   </ul>
   <a href="https://wa.me/SEU_NUMERO?text=Ol%C3%A1!%20Tenho%20interesse%20em%20um%20sistema%20para%20minha%20empresa." class="nav-cta" target="_blank">Falar com especialista</a>
+  <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -788,6 +795,14 @@
 </footer>
 
 <script>
+function toggleMenu(){
+  if(window.innerWidth <= 900) {
+    const nav = document.querySelector('.nav-links');
+    nav.classList.toggle('active');
+    document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+  }
+}
+
 function toggleFaq(el){
   const item=el.parentElement;
   const isOpen=item.classList.contains('open');
