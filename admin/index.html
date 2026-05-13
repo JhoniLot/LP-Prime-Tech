@@ -195,7 +195,8 @@
                         <label>Mensagem (HTML)</label>
                         <textarea id="campaignBody" rows="10"></textarea>
                     </div>
-                    <button class="btn-action" onclick="alert('Modo Simulação Ativo')">🚀 Disparar Campanha</button>
+                    <button class="btn-action" onclick="sendCampaign()" id="campaignBtn">🚀 Disparar Campanha</button>
+                    <p id="campaignStatus" style="font-size:0.85rem; color:var(--text-dim); text-align:center; margin-top:10px;"></p>
                 </div>
             </div>
         </div>
@@ -380,6 +381,46 @@
             document.getElementById('statLeads').innerText = leads ? leads.length : 0;
             const { data: meets } = await _supabase.from('meetings').select('id');
             document.getElementById('statMeetings').innerText = meets ? meets.length : 0;
+        }
+
+        async function sendCampaign() {
+            const subjectInput = document.getElementById('campaignSubject').value;
+            const bodyInput = document.getElementById('campaignBody').value;
+            const listId = document.getElementById('campaignListSelect').value;
+            const status = document.getElementById('campaignStatus');
+            const token = localStorage.getItem('ms_token') || 'mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS';
+
+            if(!subjectInput || !bodyInput || !listId) return alert('Preencha tudo!');
+
+            status.innerText = 'Buscando leads...';
+            const { data: leads } = await _supabase.from('leads').select('*').eq('list_id', listId);
+            
+            if(!leads || leads.length === 0) return alert('Nenhum lead nesta lista!');
+            if(!confirm(`Enviar para ${leads.length} leads agora?`)) return;
+
+            let sent = 0;
+            for(const lead of leads) {
+                status.innerText = `Enviando ${sent+1}/${leads.length}...`;
+                const finalSubject = subjectInput.replace(/{{ NOME }}/g, lead.nome);
+                const finalBody = bodyInput.replace(/{{ NOME }}/g, lead.nome);
+
+                await fetch('https://api.mailersend.com/v1/email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        "from": { "email": "contato@primetechonline.shop", "name": "Prime Tech" },
+                        "to": [{ "email": lead.email, "name": lead.nome }],
+                        "subject": finalSubject,
+                        "html": finalBody
+                    })
+                });
+                sent++;
+            }
+            status.innerText = '✅ Enviado com sucesso!';
+            alert('Campanha finalizada!');
         }
 
         async function fetchActivity() {
