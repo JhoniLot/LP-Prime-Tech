@@ -1,39 +1,47 @@
 # Prime Tech - Robô de Prospecção Sincronizado
-# Este script lê ordens de envio do Dashboard e executa via MailerSend
+# Este script lê ordens de envio e o Token do Dashboard via Supabase
 
 $SUPABASE_URL = "https://zseqxonektcdrphtxfcn.supabase.co"
 $SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzZXF4b25la3RjZHJwaHR4ZmNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODA1NTUsImV4cCI6MjA5NDI1NjU1NX0.8FXsU2GiM6Owm6Hl0CrRY-FG0xi5JmmvmDsts7B3JuU"
-$MAILERSEND_TOKEN = "mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS"
 
 Write-Host "--- PRIME TECH COMMAND CENTER ---" -ForegroundColor Cyan
-Write-Host "Procurando campanhas preparadas no site..." -ForegroundColor Yellow
+Write-Host "Iniciando sincronização com o banco de dados..." -ForegroundColor Yellow
 
-# 1. Buscar a Campanha mais recente que esteja "Pronta"
+# 1. Buscar Token da MailerSend nas configurações
 $headers = @{ "apikey" = $SUPABASE_KEY; "Authorization" = "Bearer $SUPABASE_KEY" }
-$campUrl = "$SUPABASE_URL/rest/v1/campaigns?status=eq.Pronta&select=*,lists(nome)"
+try {
+    $settings = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/settings?id=eq.mailersend_token&select=value" -Method Get -Headers $headers
+    $MAILERSEND_TOKEN = $settings[0].value
+    if (!$MAILERSEND_TOKEN) { throw "Token não encontrado no banco." }
+} catch {
+    Write-Host "Aviso: Token não encontrado no banco. Usando valor padrão." -ForegroundColor Gray
+    $MAILERSEND_TOKEN = "mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS"
+}
 
+# 2. Buscar a Campanha mais recente que esteja "Pronta"
+Write-Host "Procurando campanhas preparadas no site..." -ForegroundColor Yellow
+$campUrl = "$SUPABASE_URL/rest/v1/campaigns?status=eq.Pronta&select=*"
 try {
     $campaigns = Invoke-RestMethod -Uri $campUrl -Method Get -Headers $headers
 } catch {
-    Write-Host "Erro ao conectar: $_" -ForegroundColor Red
+    Write-Host "Erro ao conectar ao Supabase: $_" -ForegroundColor Red
     return
 }
 
 if ($null -eq $campaigns -or $campaigns.Count -eq 0) {
-    Write-Host "Nenhuma campanha pendente. Vá ao site e clique em 'Disparar' primeiro!" -ForegroundColor Green
+    Write-Host "Nenhuma campanha pendente no site!" -ForegroundColor Green
     return
 }
 
-$camp = $campaigns[0] # Pega a primeira da fila
+$camp = $campaigns[0]
 $assunto = $camp.assunto
 $mensagem = $camp.mensagem
 $listId = $camp.list_id
 
 Write-Host "`nCampanha Encontrada!" -ForegroundColor Green
 Write-Host "Assunto: $assunto"
-Write-Host "Destino: Lista ID $listId"
 
-# 2. Buscar Leads dessa lista específica
+# 3. Buscar Leads
 Write-Host "Buscando leads da lista..." -ForegroundColor Yellow
 $leadsUrl = "$SUPABASE_URL/rest/v1/leads?list_id=eq.$listId&select=*"
 $leads = Invoke-RestMethod -Uri $leadsUrl -Method Get -Headers $headers
@@ -46,14 +54,12 @@ if ($leads.Count -eq 0) {
 $confirm = Read-Host "`nDeseja iniciar o disparo para $($leads.Count) leads agora? (S/N)"
 if ($confirm -ne "S") { return }
 
-# 3. Disparar
+# 4. Disparar
 foreach ($lead in $leads) {
     $email = $lead.email
     $nome = $lead.nome
-    
     Write-Host "Enviando para: $email..." -ForegroundColor White
     
-    # Personalizar Tags
     $finalSubject = $assunto.Replace("{{ NOME }}", $nome)
     $finalBody = $mensagem.Replace("{{ NOME }}", $nome)
 
@@ -70,24 +76,20 @@ foreach ($lead in $leads) {
             "Content-Type" = "application/json"
             "X-Requested-With" = "XMLHttpRequest"
         }
-        
         Invoke-WebRequest -Uri "https://api.mailersend.com/v1/email" `
             -Method Post `
             -Headers $apiHeaders `
             -Body ([System.Text.Encoding]::UTF8.GetBytes($mailBody))
-        
         Write-Host "Sucesso: $email" -ForegroundColor Green
     } catch {
         Write-Host "Erro em $($email): $_" -ForegroundColor Red
-        Write-Host "DICA: Verifique se o seu Token na MailerSend está ativo e se o domínio primetechonline.shop está verificado lá!" -ForegroundColor Gray
     }
-    
-    Start-Sleep -Seconds 1 # Delay anti-spam
+    Start-Sleep -Seconds 1
 }
 
-# 4. Marcar Campanha como Enviada
+# 5. Finalizar
 $updateUrl = "$SUPABASE_URL/rest/v1/campaigns?id=eq.$($camp.id)"
 $updateBody = @{ "status" = "Enviada" } | ConvertTo-Json
 Invoke-RestMethod -Uri $updateUrl -Method Patch -Headers $headers -Body $updateBody -ContentType "application/json"
 
-Write-Host "`n--- TUDO ENVIADO COM SUCESSO! ---" -ForegroundColor Cyan
+Write-Host "`n--- DISPARO CONCLUÍDO! ---" -ForegroundColor Cyan

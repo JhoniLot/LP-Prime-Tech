@@ -305,6 +305,20 @@
             document.getElementById('campaignListSelect').innerHTML = data.map(l => `<option value="${l.id}">${l.nome}</option>`).join('');
         }
 
+        async function updateSettings() {
+            const token = document.getElementById('settingToken').value;
+            if(!token) return alert('Insira um token válido!');
+            
+            const { error } = await _supabase.from('settings').upsert({ id: 'mailersend_token', value: token });
+            
+            if(error) {
+                alert('Erro ao salvar no banco: ' + error.message);
+            } else {
+                localStorage.setItem('ms_token', token);
+                alert('Configurações salvas com sucesso! O robô já pode usar o novo token.');
+            }
+        }
+
         async function createList() {
             const name = document.getElementById('newListName').value;
             if(!name) return;
