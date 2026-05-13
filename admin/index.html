@@ -292,7 +292,7 @@
             document.querySelectorAll('nav li').forEach(li => li.classList.remove('active'));
             document.getElementById('nav-' + id).classList.add('active');
             
-            if(id === 'lists') fetchLists();
+            if(id === 'lists' || id === 'campaigns') fetchLists();
             if(id === 'dashboard') { fetchStats(); fetchActivity(); }
         }
 
@@ -419,6 +419,7 @@
 
         fetchStats();
         fetchActivity();
+        fetchLists(); // Carrega as listas logo de cara
     </script>
 </body>
 </html>

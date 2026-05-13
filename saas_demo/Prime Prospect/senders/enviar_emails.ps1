@@ -72,7 +72,7 @@ foreach ($lead in $leads) {
         
         Write-Host "Sucesso: $email" -ForegroundColor Green
     } catch {
-        Write-Host "Erro em $email: $_" -ForegroundColor Red
+        Write-Host "Erro em $($email): $_" -ForegroundColor Red
     }
     
     Start-Sleep -Seconds 1 # Delay anti-spam
