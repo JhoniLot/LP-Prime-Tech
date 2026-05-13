@@ -215,7 +215,8 @@
             <ul>
                 <li id="nav-dashboard" class="active" onclick="showSection('dashboard')"><i>📊</i> Dashboard</li>
                 <li id="nav-campaigns" onclick="showSection('campaigns')"><i>🚀</i> Campanhas</li>
-                <li id="nav-meetings" onclick="showSection('meetings')"><i>👥</i> Leads & Reuniões</li>
+                <li id="nav-lists" onclick="showSection('lists')"><i>📋</i> Listas</li>
+                <li id="nav-meetings" onclick="showSection('meetings')"><i>👥</i> Reuniões</li>
                 <li id="nav-settings" onclick="showSection('settings')"><i>⚙️</i> Configurações</li>
             </ul>
         </nav>
@@ -287,8 +288,14 @@
         <!-- SEÇÃO CAMPANHAS -->
         <div id="section-campaigns" class="content-section" style="display: none;">
             <div class="panel" style="max-width: 800px;">
-                <h2>Nova Campanha de Prospecção</h2>
+                <h2>Nova Campanha</h2>
                 <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;">
+                    <div>
+                        <label style="display:block; margin-bottom:0.5rem; color:var(--text-dim);">Selecionar Lista de Destino</label>
+                        <select id="campaignListSelect" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff;">
+                            <option value="">Carregando listas...</option>
+                        </select>
+                    </div>
                     <div>
                         <label style="display:block; margin-bottom:0.5rem; color:var(--text-dim);">Assunto do E-mail</label>
                         <input type="text" id="campaignSubject" placeholder="Ex: Eficiência operacional na {{ NOME }}" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff;">
@@ -299,6 +306,32 @@
                     </div>
                     <button class="btn-action" onclick="sendCampaign()" style="padding:1.2rem;">🚀 Disparar para todos os Leads (API MailerSend)</button>
                     <p id="campaignStatus" style="font-size:0.85rem; color:var(--text-dim); text-align:center;"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO LISTAS -->
+        <div id="section-lists" class="content-section" style="display: none;">
+            <div class="dashboard-row">
+                <div class="panel">
+                    <h2>Suas Listas de Contatos</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome da Lista</th>
+                                <th>Criada em</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="panel">
+                    <h2>Nova Lista</h2>
+                    <div style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
+                        <input type="text" id="newListName" placeholder="Ex: Clínicas de Estética SP" style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff;">
+                        <button class="btn-action" onclick="createList()">Criar Lista</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -372,11 +405,45 @@
             document.getElementById('nav-' + sectionId).classList.add('active');
             
             // Atualizar título
-            const titles = { 'dashboard': 'Command Center', 'campaigns': 'Campanhas', 'meetings': 'Leads & Reuniões', 'settings': 'Configurações' };
+            const titles = { 'dashboard': 'Command Center', 'campaigns': 'Campanhas', 'lists': 'Gestão de Listas', 'meetings': 'Reuniões', 'settings': 'Configurações' };
             document.getElementById('sectionTitle').innerText = titles[sectionId];
 
             if(sectionId === 'meetings') fetchMeetings();
+            if(sectionId === 'lists') fetchLists();
+            if(sectionId === 'campaigns') fetchListsForSelect();
             if(sectionId === 'dashboard') { fetchStats(); fetchActivity(); }
+        }
+
+        async function fetchLists() {
+            const body = document.getElementById('listsTableBody');
+            const { data: lists } = await supabaseClient.from('lists').select('*');
+            if (!lists) return;
+            body.innerHTML = lists.map(l => `
+                <tr>
+                    <td>${l.nome}</td>
+                    <td>${new Date(l.created_at).toLocaleDateString()}</td>
+                    <td><button style="background:none; border:none; color:var(--text-dim);">Editar</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function fetchListsForSelect() {
+            const select = document.getElementById('campaignListSelect');
+            const { data: lists } = await supabaseClient.from('lists').select('*');
+            if (!lists) return;
+            select.innerHTML = '<option value="all">Enviar para Todos os Contatos</option>' + 
+                lists.map(l => `<option value="${l.id}">${l.nome}</option>`).join('');
+        }
+
+        async function createList() {
+            const name = document.getElementById('newListName').value;
+            if(!name) return;
+            const { error } = await supabaseClient.from('lists').insert([{ nome: name }]);
+            if(!error) {
+                alert('Lista criada!');
+                document.getElementById('newListName').value = '';
+                fetchLists();
+            }
         }
 
         function updateSettings() {
