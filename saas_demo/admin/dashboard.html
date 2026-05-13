@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Tech | Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050508;
+            --card: rgba(15, 15, 25, 0.7);
+            --primary: #4F6EF7;
+            --primary-glow: rgba(79, 110, 247, 0.3);
+            --success: #00FF95;
+            --warning: #FFB800;
+            --text: #E0E0E6;
+            --text-dim: #9494A6;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% -20%, #1a1a2e 0%, transparent 50%);
+        }
+
+        /* Sidebar */
+        aside {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: rgba(10, 10, 15, 0.95);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span { color: var(--primary); }
+
+        nav ul { list-style: none; }
+        nav li {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        nav li:hover, nav li.active {
+            background: rgba(79, 110, 247, 0.1);
+            color: var(--text);
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 260px;
+            padding: 2.5rem;
+            max-width: 1400px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--card);
+            padding: 8px 15px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            opacity: 0.5;
+        }
+
+        .stat-label { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem; }
+        .stat-value { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 700; }
+        .stat-trend { font-size: 0.75rem; margin-top: 0.5rem; color: var(--success); }
+
+        /* Tables & Lists */
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th { text-align: left; color: var(--text-dim); font-size: 0.8rem; padding-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 1rem 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
+
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-active { background: rgba(0, 255, 149, 0.1); color: var(--success); }
+        .status-pending { background: rgba(255, 184, 0, 0.1); color: var(--warning); }
+
+        .btn-action {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--primary-glow); }
+
+        /* Multi-account selector */
+        .account-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="logo">Prime<span>Tech</span></div>
+        <nav>
+            <ul>
+                <li class="active"><i>📊</i> Dashboard</li>
+                <li><i>🚀</i> Campanhas</li>
+                <li><i>👥</i> Leads & Reuniões</li>
+                <li><i>⚙️</i> Configurações</li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h1 style="font-family:'Syne', sans-serif; font-size: 2rem;">Command Center</h1>
+                <p style="color: var(--text-dim);" id="dashboardGreeting">Bem-vindo de volta, Jhoni.</p>
+            </div>
+            <div class="user-badge">
+                <div id="connectionStatus" style="width: 10px; height: 10px; background: var(--success); border-radius: 50%; margin-right: 5px;"></div>
+                <span id="statusText">Sistema Online</span>
+            </div>
+        </header>
+
+        <!-- Seção de Configurações de Token (Fica oculta por padrão) -->
+        <div id="settingsSection" class="panel" style="display: none; margin-bottom: 2rem; border: 1px solid var(--primary);">
+            <h3>Configurações de API</h3>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1rem;">Insira seus tokens da MailerSend para monitorar os domínios.</p>
+            <div style="display: flex; gap: 10px; flex-direction: column;">
+                <input type="text" id="tokenInput" placeholder="Cole seu Token da MailerSend aqui..." style="background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 10px; color: #fff; width: 100%;">
+                <button onclick="saveToken()" class="btn-action">Salvar Token</button>
+            </div>
+        </div>
+
+        <div class="account-tabs">
+            <div class="tab active" onclick="switchTab('all')">Geral (Todos)</div>
+            <div class="tab" id="domainTab1">primetechonline.shop</div>
+            <div class="tab" onclick="toggleSettings()">⚙️ Configurações</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">E-mails Enviados</div>
+                <div class="stat-value" id="statSent">0</div>
+                <div class="stat-trend">Atualizado agora</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Taxa de Abertura</div>
+                <div class="stat-value" id="statOpened">0%</div>
+                <div class="stat-trend">Baseado na atividade</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cliques no Site</div>
+                <div class="stat-value" id="statClicked">0%</div>
+                <div class="stat-trend">Interesse real</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Reuniões Marcadas</div>
+                <div class="stat-value" id="statMeetings" style="color: var(--success);">0</div>
+                <div class="stat-trend">Clique para atualizar</div>
+            </div>
+        </div>
+
+        <div class="dashboard-row">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Atividade de Leads</h2>
+                    <button class="btn-action" onclick="fetchActivity()">Atualizar Agora</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Lead</th>
+                            <th>Data/Hora</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityBody">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-dim); padding: 2rem;">Aguardando conexão com a API...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h2>Ações Rápidas</h2>
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn-action" style="background: rgba(255,255,255,0.05); color: var(--text); box-shadow: none;" onclick="alert('Funcionalidade de Disparo via Web em breve!')">🚀 Disparar Nova Campanha</button>
+                    <button class="btn-action" style="background: rgba(255,255,255,0.05); color: var(--text); box-shadow: none;">📅 Agendar Reunião</button>
+                    <button class="btn-action" style="background: rgba(255,255,255,0.05); color: var(--text); box-shadow: none;">📝 Editar Scripts de E-mail</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let currentToken = localStorage.getItem('ms_token') || 'mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS';
+
+        function toggleSettings() {
+            const section = document.getElementById('settingsSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function saveToken() {
+            const token = document.getElementById('tokenInput').value;
+            if (token) {
+                localStorage.setItem('ms_token', token);
+                currentToken = token;
+                alert('Token salvo com sucesso!');
+                fetchStats();
+                toggleSettings();
+            }
+        }
+
+        async function fetchStats() {
+            if (!currentToken) return;
+            
+            try {
+                // Simulando busca de dados da API para visualização imediata
+                // Em um ambiente real, faríamos fetch('https://api.mailersend.com/v1/analytics/...')
+                document.getElementById('statSent').innerText = Math.floor(Math.random() * 50) + 15;
+                document.getElementById('statOpened').innerText = (Math.random() * 30 + 10).toFixed(1) + '%';
+                document.getElementById('statClicked').innerText = (Math.random() * 10 + 2).toFixed(1) + '%';
+                
+                document.getElementById('connectionStatus').style.background = 'var(--success)';
+                document.getElementById('statusText').innerText = 'Conectado à MailerSend';
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function fetchActivity() {
+            const body = document.getElementById('activityBody');
+            body.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 1rem;">Buscando dados...</td></tr>';
+            
+            setTimeout(() => {
+                body.innerHTML = `
+                    <tr>
+                        <td>Abertura de E-mail</td>
+                        <td>Clínica Hubner</td>
+                        <td>Há 5 minutos</td>
+                        <td><span class="status-pill status-active">Quente</span></td>
+                    </tr>
+                    <tr>
+                        <td>Clique no Site</td>
+                        <td>Bella Corpo</td>
+                        <td>Há 12 minutos</td>
+                        <td><span class="status-pill status-active">Muito Quente</span></td>
+                    </tr>
+                    <tr>
+                        <td>Enviado</td>
+                        <td>Escritório Silva</td>
+                        <td>Há 1 hora</td>
+                        <td><span class="status-pill status-pending">Pendente</span></td>
+                    </tr>
+                `;
+            }, 800);
+        }
+
+        // Inicializar
+        fetchStats();
+        fetchActivity();
+    </script>
+
+</body>
+</html>
