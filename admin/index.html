@@ -30,7 +30,6 @@
             background-image: radial-gradient(circle at 50% -20%, #1a1a2e 0%, transparent 50%);
         }
 
-        /* Sidebar */
         aside {
             width: 260px;
             height: 100vh;
@@ -45,16 +44,7 @@
             z-index: 100;
         }
 
-        .logo {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .logo { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 3rem; display: flex; align-items: center; gap: 10px; }
         .logo span { color: var(--primary); }
 
         nav ul { list-style: none; }
@@ -70,42 +60,15 @@
             gap: 12px;
         }
 
-        nav li:hover, nav li.active {
-            background: rgba(79, 110, 247, 0.1);
-            color: var(--text);
-        }
+        nav li:hover, nav li.active { background: rgba(79, 110, 247, 0.1); color: var(--text); }
 
-        /* Main Content */
-        main {
-            margin-left: 260px;
-            padding: 2.5rem;
-            max-width: 1400px;
-        }
+        main { margin-left: 260px; padding: 2.5rem; max-width: 1400px; }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-        }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
 
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--card);
-            padding: 8px 15px;
-            border-radius: 50px;
-            border: 1px solid var(--border);
-        }
+        .user-badge { display: flex; align-items: center; gap: 12px; background: var(--card); padding: 8px 15px; border-radius: 50px; border: 1px solid var(--border); }
 
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
 
         .stat-card {
             background: var(--card);
@@ -114,58 +77,22 @@
             border: 1px solid var(--border);
             backdrop-filter: blur(10px);
             position: relative;
-            overflow: hidden;
         }
 
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-            opacity: 0.5;
-        }
+        .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--primary); opacity: 0.5; }
 
         .stat-label { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.5rem; }
         .stat-value { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 700; }
-        .stat-trend { font-size: 0.75rem; margin-top: 0.5rem; color: var(--success); }
 
-        /* Tables & Lists */
-        .dashboard-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-        }
+        .dashboard-row { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
 
-        .panel {
-            background: var(--card);
-            padding: 2rem;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
+        .panel { background: var(--card); padding: 2rem; border-radius: 24px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
 
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        th { text-align: left; color: var(--text-dim); font-size: 0.8rem; padding-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        th { text-align: left; color: var(--text-dim); font-size: 0.8rem; padding-bottom: 1rem; text-transform: uppercase; }
         td { padding: 1rem 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
 
-        .status-pill {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .status-active { background: rgba(0, 255, 149, 0.1); color: var(--success); }
-        .status-pending { background: rgba(255, 184, 0, 0.1); color: var(--warning); }
+        .status-pill { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(0, 255, 149, 0.1); color: var(--success); }
 
         .btn-action {
             background: var(--primary);
@@ -176,37 +103,14 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 4px 15px var(--primary-glow);
         }
 
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--primary-glow); }
-
-        /* Multi-account selector */
-        .account-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 2rem;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.3s;
-        }
-
-        .tab.active {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
+        .btn-action:hover { transform: translateY(-2px); }
 
         .content-section { display: none; }
         .content-section.active { display: block; }
+
+        input, select, textarea { width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: #fff; }
 
     </style>
 </head>
@@ -218,7 +122,7 @@
             <ul>
                 <li id="nav-dashboard" class="active" onclick="showSection('dashboard')"><i>📊</i> Dashboard</li>
                 <li id="nav-campaigns" onclick="showSection('campaigns')"><i>🚀</i> Campanhas</li>
-                <li id="nav-lists" onclick="showSection('lists')"><i>📋</i> Listas</li>
+                <li id="nav-lists" onclick="showSection('lists')"><i>📋</i> Listas & Import</li>
                 <li id="nav-meetings" onclick="showSection('meetings')"><i>👥</i> Reuniões</li>
                 <li id="nav-settings" onclick="showSection('settings')"><i>⚙️</i> Configurações</li>
             </ul>
@@ -229,160 +133,135 @@
         <header>
             <div>
                 <h1 id="sectionTitle" style="font-family:'Syne', sans-serif; font-size: 2rem;">Command Center</h1>
-                <p style="color: var(--text-dim);" id="dashboardGreeting">Bem-vindo de volta, Jhoni.</p>
+                <p style="color: var(--text-dim);">Gestão de Leads Prime Tech</p>
             </div>
             <div class="user-badge">
-                <div id="connectionStatus" style="width: 10px; height: 10px; background: var(--warning); border-radius: 50%; margin-right: 5px;"></div>
-                <span id="statusText">Iniciando...</span>
+                <div id="connectionStatus" style="width: 10px; height: 10px; background: var(--success); border-radius: 50%; margin-right: 5px;"></div>
+                <span id="statusText">Conectado</span>
             </div>
         </header>
 
-        <!-- SEÇÃO DASHBOARD -->
+        <!-- DASHBOARD -->
         <div id="section-dashboard" class="content-section active">
-            <div class="account-tabs">
-                <div class="tab active">Geral (Todos)</div>
-                <div class="tab">primetechonline.shop</div>
-            </div>
-
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">E-mails Enviados</div>
-                    <div class="stat-value" id="statSent">0</div>
-                    <div class="stat-trend">Total acumulado</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Taxa de Abertura</div>
-                    <div class="stat-value" id="statOpened">0%</div>
-                    <div class="stat-trend">Baseado em cliques</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Cliques no Site</div>
-                    <div class="stat-value" id="statClicked">0%</div>
-                    <div class="stat-trend">Interesse real</div>
+                    <div class="stat-value" id="statSent">15+</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Reuniões Marcadas</div>
-                    <div class="stat-value" id="statMeetings" style="color: var(--success);">0</div>
-                    <div class="stat-trend">Meta: 20/mês</div>
+                    <div class="stat-value" id="statMeetings">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total de Leads</div>
+                    <div class="stat-value" id="statLeads">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Conversão</div>
+                    <div class="stat-value">0%</div>
                 </div>
             </div>
 
-            <div class="dashboard-row">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h2>Leads Recentes</h2>
-                        <button class="btn-action" onclick="fetchActivity()">Atualizar</button>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Segmento</th>
-                                <th>Lead</th>
-                                <th>Data</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="activityBody"></tbody>
-                    </table>
-                </div>
+            <div class="panel">
+                <h2>Leads Recentes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Segmento</th>
+                            <th>Nome</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityBody"></tbody>
+                </table>
             </div>
         </div>
 
-        <!-- SEÇÃO CAMPANHAS -->
+        <!-- CAMPANHAS -->
         <div id="section-campaigns" class="content-section">
             <div class="panel" style="max-width: 800px;">
                 <h2>Nova Campanha</h2>
                 <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;">
                     <div>
-                        <label style="display:block; margin-bottom:0.5rem; color:var(--text-dim);">Selecionar Lista de Destino</label>
-                        <select id="campaignListSelect" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff;">
-                            <option value="">Carregando listas...</option>
-                        </select>
+                        <label>Lista de Destino</label>
+                        <select id="campaignListSelect"></select>
                     </div>
                     <div>
-                        <label style="display:block; margin-bottom:0.5rem; color:var(--text-dim);">Assunto do E-mail</label>
-                        <input type="text" id="campaignSubject" placeholder="Ex: Eficiência operacional na {{ NOME }}" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff;">
+                        <label>Assunto</label>
+                        <input type="text" id="campaignSubject" placeholder="Assunto do e-mail...">
                     </div>
                     <div>
-                        <label style="display:block; margin-bottom:0.5rem; color:var(--text-dim);">Corpo do E-mail (HTML)</label>
-                        <textarea id="campaignBody" rows="10" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff; font-family:monospace; resize:none;"></textarea>
+                        <label>Mensagem (HTML)</label>
+                        <textarea id="campaignBody" rows="10"></textarea>
                     </div>
-                    <button class="btn-action" onclick="sendCampaign()" style="padding:1.2rem;">🚀 Disparar para todos os Leads (API MailerSend)</button>
-                    <p id="campaignStatus" style="font-size:0.85rem; color:var(--text-dim); text-align:center;"></p>
+                    <button class="btn-action" onclick="alert('Modo Simulação Ativo')">🚀 Disparar Campanha</button>
                 </div>
             </div>
         </div>
 
-        <!-- SEÇÃO LISTAS -->
+        <!-- LISTAS & IMPORT -->
         <div id="section-lists" class="content-section">
-            <div class="dashboard-row">
+            <div class="dashboard-row" style="grid-template-columns: 1fr 1fr;">
                 <div class="panel">
-                    <h2>Suas Listas de Contatos</h2>
-                    <table>
+                    <h2>Gestão de Listas</h2>
+                    <table style="margin-bottom: 2rem;">
                         <thead>
-                            <tr>
-                                <th>Nome da Lista</th>
-                                <th>Criada em</th>
-                                <th>Ações</th>
-                            </tr>
+                            <tr><th>Nome</th><th>Ações</th></tr>
                         </thead>
                         <tbody id="listsTableBody"></tbody>
                     </table>
+                    <h3>Criar Nova Lista</h3>
+                    <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+                        <input type="text" id="newListName" placeholder="Ex: Clínicas SP">
+                        <button class="btn-action" onclick="createList()">Criar</button>
+                    </div>
                 </div>
+
                 <div class="panel">
-                    <h2>Nova Lista</h2>
-                    <div style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
-                        <input type="text" id="newListName" placeholder="Ex: Clínicas de Estética SP" style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff;">
-                        <button class="btn-action" onclick="createList()">Criar Lista</button>
+                    <h2>Importar Leads (CSV)</h2>
+                    <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:1.5rem;">
+                        <div>
+                            <label>1. Escolha a Lista Destino</label>
+                            <select id="importListSelect"></select>
+                        </div>
+                        <div>
+                            <label>2. Upload do Arquivo CSV</label>
+                            <input type="file" id="csvFileInput" accept=".csv">
+                        </div>
+                        <button class="btn-action" onclick="importLeads()" id="importBtn">📤 Iniciar Importação</button>
+                        <p id="importStatus" style="font-size:0.8rem; color:var(--text-dim);"></p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SEÇÃO REUNIÕES -->
+        <!-- REUNIÕES -->
         <div id="section-meetings" class="content-section">
             <div class="dashboard-row">
                 <div class="panel">
-                    <h2>Gestão de Reuniões</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Lead</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="meetingsListBody"></tbody>
-                    </table>
+                    <h2>Agenda</h2>
+                    <tbody id="meetingsListBody"></tbody>
                 </div>
                 <div class="panel">
                     <h2>Novo Agendamento</h2>
                     <div style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
-                        <input type="text" id="meetLeadName" placeholder="Nome do Lead" style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff;">
-                        <input type="datetime-local" id="meetDate" style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff;">
-                        <textarea id="meetNotes" placeholder="Notas da reunião..." style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff; resize:none;"></textarea>
-                        <button class="btn-action" onclick="saveMeeting()">Agendar Agora</button>
+                        <input type="text" id="meetLeadName" placeholder="Nome do Lead">
+                        <input type="datetime-local" id="meetDate">
+                        <button class="btn-action" onclick="saveMeeting()">Agendar</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SEÇÃO CONFIGURAÇÕES -->
+        <!-- CONFIGURAÇÕES -->
         <div id="section-settings" class="content-section">
             <div class="panel" style="max-width: 600px;">
-                <h2>Configurações do Sistema</h2>
-                <div style="margin-top:2rem; display:flex; flex-direction:column; gap:2rem;">
-                    <div>
-                        <h4 style="margin-bottom:1rem; color:var(--primary);">MailerSend API Token</h4>
-                        <input type="password" id="settingToken" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff;">
-                        <button class="btn-action" style="margin-top:0.5rem;" onclick="updateSettings()">Salvar Configurações</button>
-                    </div>
-                    <div style="padding:1.5rem; background:rgba(255,0,0,0.05); border-radius:15px; border:1px solid rgba(255,0,0,0.1);">
-                        <h4 style="color:#ff4444;">Zona de Perigo</h4>
-                        <p style="font-size:0.8rem; color:var(--text-dim); margin:0.5rem 0 1rem;">Isso irá remover todos os dados locais do seu navegador.</p>
-                        <button onclick="localStorage.clear(); location.reload();" style="background:none; border:1px solid #ff4444; color:#ff4444; padding:8px 15px; border-radius:8px; cursor:pointer;">Limpar Cache do Sistema</button>
-                    </div>
+                <h2>Configurações</h2>
+                <div style="margin-top:2rem;">
+                    <label>MailerSend API Token</label>
+                    <input type="password" id="settingToken">
+                    <button class="btn-action" style="margin-top:1rem;" onclick="updateSettings()">Salvar</button>
                 </div>
             </div>
         </div>
@@ -392,145 +271,81 @@
     <script>
         const SUPABASE_URL = 'https://zseqxonektcdrphtxfcn.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzZXF4b25la3RjZHJwaHR4ZmNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODA1NTUsImV4cCI6MjA5NDI1NjU1NX0.8FXsU2GiM6Owm6Hl0CrRY-FG0xi5JmmvmDsts7B3JuU';
-        
-        // Inicialização correta do cliente Supabase
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let currentToken = localStorage.getItem('ms_token') || 'mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS';
-        document.getElementById('settingToken').value = currentToken;
-
-        function showSection(sectionId) {
+        function showSection(id) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('section-' + sectionId).classList.add('active');
-            
+            document.getElementById('section-' + id).classList.add('active');
             document.querySelectorAll('nav li').forEach(li => li.classList.remove('active'));
-            document.getElementById('nav-' + sectionId).classList.add('active');
+            document.getElementById('nav-' + id).classList.add('active');
             
-            const titles = { 'dashboard': 'Command Center', 'campaigns': 'Campanhas', 'lists': 'Gestão de Listas', 'meetings': 'Reuniões', 'settings': 'Configurações' };
-            document.getElementById('sectionTitle').innerText = titles[sectionId];
-
-            if(sectionId === 'meetings') fetchMeetings();
-            if(sectionId === 'lists') fetchLists();
-            if(sectionId === 'campaigns') fetchListsForSelect();
-            if(sectionId === 'dashboard') { fetchStats(); fetchActivity(); }
-        }
-
-        function updateSettings() {
-            const token = document.getElementById('settingToken').value;
-            localStorage.setItem('ms_token', token);
-            currentToken = token;
-            alert('Configurações salvas!');
-            fetchStats();
-        }
-
-        async function fetchStats() {
-            if (!currentToken) return;
-            try {
-                const { data: meetings, error: mError } = await _supabase.from('meetings').select('*');
-                if(!mError) document.getElementById('statMeetings').innerText = meetings ? meetings.length : 0;
-                
-                document.getElementById('statSent').innerText = "15+";
-                document.getElementById('connectionStatus').style.background = 'var(--success)';
-                document.getElementById('statusText').innerText = 'Conectado';
-            } catch (e) { console.warn(e); }
-        }
-
-        async function fetchActivity() {
-            const body = document.getElementById('activityBody');
-            try {
-                const { data: leads, error } = await _supabase.from('leads').select('*').order('created_at', { ascending: false });
-                if (error || !leads || leads.length === 0) {
-                    body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhum lead encontrado.</td></tr>';
-                    return;
-                }
-                body.innerHTML = leads.map(lead => `
-                    <tr>
-                        <td>${lead.segmento || '---'}</td>
-                        <td>${lead.nome}</td>
-                        <td>${new Date(lead.created_at).toLocaleDateString()}</td>
-                        <td><span class="status-pill status-active">${lead.status}</span></td>
-                    </tr>
-                `).join('');
-            } catch (e) { console.error(e); }
+            if(id === 'lists') fetchLists();
+            if(id === 'dashboard') { fetchStats(); fetchActivity(); }
         }
 
         async function fetchLists() {
-            const body = document.getElementById('listsTableBody');
-            try {
-                const { data: lists, error } = await _supabase.from('lists').select('*');
-                if (error || !lists) {
-                    body.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tabela de listas não encontrada.</td></tr>';
-                    return;
-                }
-                body.innerHTML = lists.map(l => `
-                    <tr>
-                        <td>${l.nome}</td>
-                        <td>${new Date(l.created_at).toLocaleDateString()}</td>
-                        <td>---</td>
-                    </tr>
-                `).join('');
-            } catch(e) { console.error(e); }
-        }
-
-        async function fetchListsForSelect() {
-            const select = document.getElementById('campaignListSelect');
-            try {
-                const { data: lists } = await _supabase.from('lists').select('*');
-                if (!lists) return;
-                select.innerHTML = '<option value="all">Enviar para Todos os Contatos</option>' + 
-                    lists.map(l => `<option value="${l.id}">${l.nome}</option>`).join('');
-            } catch(e) { console.error(e); }
+            const { data } = await _supabase.from('lists').select('*');
+            if(!data) return;
+            const html = data.map(l => `<tr><td>${l.nome}</td><td>---</td></tr>`).join('');
+            document.getElementById('listsTableBody').innerHTML = html;
+            document.getElementById('importListSelect').innerHTML = data.map(l => `<option value="${l.id}">${l.nome}</option>`).join('');
+            document.getElementById('campaignListSelect').innerHTML = data.map(l => `<option value="${l.id}">${l.nome}</option>`).join('');
         }
 
         async function createList() {
             const name = document.getElementById('newListName').value;
-            if(!name) return alert('Digite um nome!');
-            
-            const { error } = await _supabase.from('lists').insert([{ nome: name }]);
-            if(error) {
-                alert('Erro: ' + error.message);
-            } else {
-                alert('Lista criada!');
-                document.getElementById('newListName').value = '';
-                fetchLists();
-            }
+            if(!name) return;
+            await _supabase.from('lists').insert([{ nome: name }]);
+            document.getElementById('newListName').value = '';
+            fetchLists();
         }
 
-        async function fetchMeetings() {
-            const body = document.getElementById('meetingsListBody');
-            try {
-                const { data: meetings } = await _supabase.from('meetings').select('*').order('data_reuniao', { ascending: true });
-                if (!meetings || meetings.length === 0) {
-                    body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhuma reunião agendada.</td></tr>';
-                    return;
+        async function importLeads() {
+            const listId = document.getElementById('importListSelect').value;
+            const fileInput = document.getElementById('csvFileInput');
+            if(!listId || !fileInput.files.length) return alert('Selecione lista e arquivo!');
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const lines = e.target.result.split('\n');
+                const leads = [];
+                for(let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',');
+                    if(cols.length >= 2 && cols[0].includes('@')) {
+                        leads.push({
+                            email: cols[0].trim(),
+                            nome: cols[1].trim(),
+                            segmento: cols[2] ? cols[2].trim() : 'Geral',
+                            list_id: listId,
+                            status: 'Pendente'
+                        });
+                    }
                 }
-                body.innerHTML = meetings.map(m => `
-                    <tr>
-                        <td>${new Date(m.data_reuniao).toLocaleString()}</td>
-                        <td>${m.notas || 'Lead'}</td>
-                        <td><span class="status-pill status-active">${m.status}</span></td>
-                        <td>---</td>
-                    </tr>
-                `).join('');
-            } catch(e) { console.error(e); }
+                const { error } = await _supabase.from('leads').upsert(leads, { onConflict: 'email' });
+                alert(error ? 'Erro: ' + error.message : `Sucesso! ${leads.length} leads importados.`);
+                fetchActivity();
+            };
+            reader.readAsText(file);
         }
 
-        async function saveMeeting() {
-            const lead = document.getElementById('meetLeadName').value;
-            const date = document.getElementById('meetDate').value;
-            if(!lead || !date) return alert('Preencha nome e data!');
-            const { error } = await _supabase.from('meetings').insert([{ notas: lead, data_reuniao: date, status: 'Agendada' }]);
-            if(!error) { alert('Sucesso!'); fetchMeetings(); }
+        async function fetchStats() {
+            const { data: leads } = await _supabase.from('leads').select('id');
+            document.getElementById('statLeads').innerText = leads ? leads.length : 0;
+            const { data: meets } = await _supabase.from('meetings').select('id');
+            document.getElementById('statMeetings').innerText = meets ? meets.length : 0;
         }
 
-        function sendCampaign() {
-            alert('Função em modo de simulação para segurança.');
+        async function fetchActivity() {
+            const { data } = await _supabase.from('leads').select('*').order('created_at', { ascending: false }).limit(10);
+            if(!data) return;
+            document.getElementById('activityBody').innerHTML = data.map(l => `
+                <tr><td>${l.segmento}</td><td>${l.nome}</td><td>${new Date(l.created_at).toLocaleDateString()}</td><td><span class="status-pill">${l.status}</span></td></tr>
+            `).join('');
         }
 
-        // Inicializar
         fetchStats();
         fetchActivity();
     </script>
-
 </body>
 </html>
