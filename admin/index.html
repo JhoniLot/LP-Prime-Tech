@@ -388,39 +388,25 @@
             const bodyInput = document.getElementById('campaignBody').value;
             const listId = document.getElementById('campaignListSelect').value;
             const status = document.getElementById('campaignStatus');
-            const token = localStorage.getItem('ms_token') || 'mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS';
 
-            if(!subjectInput || !bodyInput || !listId) return alert('Preencha tudo!');
+            if(!subjectInput || !bodyInput || !listId) return alert('Preencha Assunto, Mensagem e Selecione a Lista!');
 
-            status.innerText = 'Buscando leads...';
-            const { data: leads } = await _supabase.from('leads').select('*').eq('list_id', listId);
+            status.innerText = 'Preparando campanha no banco...';
             
-            if(!leads || leads.length === 0) return alert('Nenhum lead nesta lista!');
-            if(!confirm(`Enviar para ${leads.length} leads agora?`)) return;
+            // Salva a ordem de disparo no banco para o robô ler
+            const { error } = await _supabase.from('campaigns').insert([{
+                assunto: subjectInput,
+                mensagem: bodyInput,
+                list_id: listId,
+                status: 'Pronta'
+            }]);
 
-            let sent = 0;
-            for(const lead of leads) {
-                status.innerText = `Enviando ${sent+1}/${leads.length}...`;
-                const finalSubject = subjectInput.replace(/{{ NOME }}/g, lead.nome);
-                const finalBody = bodyInput.replace(/{{ NOME }}/g, lead.nome);
-
-                await fetch('https://api.mailersend.com/v1/email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        "from": { "email": "contato@primetechonline.shop", "name": "Prime Tech" },
-                        "to": [{ "email": lead.email, "name": lead.nome }],
-                        "subject": finalSubject,
-                        "html": finalBody
-                    })
-                });
-                sent++;
+            if(error) {
+                alert('Erro ao preparar: ' + error.message);
+            } else {
+                status.innerHTML = `<span style="color:var(--success)">🚀 Campanha Preparada!</span><br>Abra o PowerShell e rode o robô para iniciar o envio.`;
+                alert('Campanha salva no banco!\n\nAgora você só precisa rodar o arquivo "enviar_emails.ps1" no seu computador para os e-mails serem disparados.');
             }
-            status.innerText = '✅ Enviado com sucesso!';
-            alert('Campanha finalizada!');
         }
 
         async function fetchActivity() {
