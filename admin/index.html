@@ -314,8 +314,17 @@
             if(error) {
                 alert('Erro ao salvar no banco: ' + error.message);
             } else {
-                localStorage.setItem('ms_token', token);
                 alert('Configurações salvas com sucesso! O robô já pode usar o novo token.');
+            }
+        }
+
+        async function fetchSettings() {
+            const { data } = await _supabase.from('settings').select('*').eq('id', 'mailersend_token').single();
+            if(data) {
+                document.getElementById('settingToken').value = data.value;
+            } else {
+                // Fallback para o novo token que você gerou
+                document.getElementById('settingToken').value = 'mlsn.10343a487aa88400078d886c85e208f67172609bda003130151a45717805213d';
             }
         }
 
@@ -433,7 +442,8 @@
 
         fetchStats();
         fetchActivity();
-        fetchLists(); // Carrega as listas logo de cara
+        fetchLists(); 
+        fetchSettings(); // Carrega o token novo
     </script>
 </body>
 </html>

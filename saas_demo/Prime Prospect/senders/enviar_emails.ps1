@@ -15,7 +15,7 @@ try {
     if (!$MAILERSEND_TOKEN) { throw "Token não encontrado no banco." }
 } catch {
     Write-Host "Aviso: Token não encontrado no banco. Usando valor padrão." -ForegroundColor Gray
-    $MAILERSEND_TOKEN = "mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS"
+    $MAILERSEND_TOKEN = "mlsn.10343a487aa88400078d886c85e208f67172609bda003130151a45717805213d"
 }
 
 # 2. Buscar a Campanha mais recente que esteja "Pronta"
