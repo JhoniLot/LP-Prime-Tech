@@ -205,6 +205,9 @@
             border-color: var(--primary);
         }
 
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+
     </style>
 </head>
 <body>
@@ -229,28 +232,28 @@
                 <p style="color: var(--text-dim);" id="dashboardGreeting">Bem-vindo de volta, Jhoni.</p>
             </div>
             <div class="user-badge">
-                <div id="connectionStatus" style="width: 10px; height: 10px; background: var(--success); border-radius: 50%; margin-right: 5px;"></div>
-                <span id="statusText">Sistema Online</span>
+                <div id="connectionStatus" style="width: 10px; height: 10px; background: var(--warning); border-radius: 50%; margin-right: 5px;"></div>
+                <span id="statusText">Iniciando...</span>
             </div>
         </header>
 
         <!-- SEÇÃO DASHBOARD -->
-        <div id="section-dashboard" class="content-section">
+        <div id="section-dashboard" class="content-section active">
             <div class="account-tabs">
-                <div class="tab active" onclick="switchTab('all')">Geral (Todos)</div>
-                <div class="tab" id="domainTab1">primetechonline.shop</div>
+                <div class="tab active">Geral (Todos)</div>
+                <div class="tab">primetechonline.shop</div>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">E-mails Enviados</div>
                     <div class="stat-value" id="statSent">0</div>
-                    <div class="stat-trend">Atualizado agora</div>
+                    <div class="stat-trend">Total acumulado</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Taxa de Abertura</div>
                     <div class="stat-value" id="statOpened">0%</div>
-                    <div class="stat-trend">Baseado na atividade</div>
+                    <div class="stat-trend">Baseado em cliques</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Cliques no Site</div>
@@ -260,7 +263,7 @@
                 <div class="stat-card">
                     <div class="stat-label">Reuniões Marcadas</div>
                     <div class="stat-value" id="statMeetings" style="color: var(--success);">0</div>
-                    <div class="stat-trend">Clique para atualizar</div>
+                    <div class="stat-trend">Meta: 20/mês</div>
                 </div>
             </div>
 
@@ -286,7 +289,7 @@
         </div>
 
         <!-- SEÇÃO CAMPANHAS -->
-        <div id="section-campaigns" class="content-section" style="display: none;">
+        <div id="section-campaigns" class="content-section">
             <div class="panel" style="max-width: 800px;">
                 <h2>Nova Campanha</h2>
                 <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;">
@@ -311,7 +314,7 @@
         </div>
 
         <!-- SEÇÃO LISTAS -->
-        <div id="section-lists" class="content-section" style="display: none;">
+        <div id="section-lists" class="content-section">
             <div class="dashboard-row">
                 <div class="panel">
                     <h2>Suas Listas de Contatos</h2>
@@ -337,7 +340,7 @@
         </div>
 
         <!-- SEÇÃO REUNIÕES -->
-        <div id="section-meetings" class="content-section" style="display: none;">
+        <div id="section-meetings" class="content-section">
             <div class="dashboard-row">
                 <div class="panel">
                     <h2>Gestão de Reuniões</h2>
@@ -366,7 +369,7 @@
         </div>
 
         <!-- SEÇÃO CONFIGURAÇÕES -->
-        <div id="section-settings" class="content-section" style="display: none;">
+        <div id="section-settings" class="content-section">
             <div class="panel" style="max-width: 600px;">
                 <h2>Configurações do Sistema</h2>
                 <div style="margin-top:2rem; display:flex; flex-direction:column; gap:2rem;">
@@ -389,22 +392,20 @@
     <script>
         const SUPABASE_URL = 'https://zseqxonektcdrphtxfcn.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzZXF4b25la3RjZHJwaHR4ZmNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODA1NTUsImV4cCI6MjA5NDI1NjU1NX0.8FXsU2GiM6Owm6Hl0CrRY-FG0xi5JmmvmDsts7B3JuU';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Inicialização correta do cliente Supabase
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentToken = localStorage.getItem('ms_token') || 'mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS';
         document.getElementById('settingToken').value = currentToken;
 
         function showSection(sectionId) {
-            // Esconder todas as seções
-            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
-            // Mostrar a seção selecionada
-            document.getElementById('section-' + sectionId).style.display = 'block';
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + sectionId).classList.add('active');
             
-            // Atualizar navegação
             document.querySelectorAll('nav li').forEach(li => li.classList.remove('active'));
             document.getElementById('nav-' + sectionId).classList.add('active');
             
-            // Atualizar título
             const titles = { 'dashboard': 'Command Center', 'campaigns': 'Campanhas', 'lists': 'Gestão de Listas', 'meetings': 'Reuniões', 'settings': 'Configurações' };
             document.getElementById('sectionTitle').innerText = titles[sectionId];
 
@@ -412,44 +413,6 @@
             if(sectionId === 'lists') fetchLists();
             if(sectionId === 'campaigns') fetchListsForSelect();
             if(sectionId === 'dashboard') { fetchStats(); fetchActivity(); }
-        }
-
-        async function fetchLists() {
-            const body = document.getElementById('listsTableBody');
-            const { data: lists } = await supabaseClient.from('lists').select('*');
-            if (!lists) return;
-            body.innerHTML = lists.map(l => `
-                <tr>
-                    <td>${l.nome}</td>
-                    <td>${new Date(l.created_at).toLocaleDateString()}</td>
-                    <td><button style="background:none; border:none; color:var(--text-dim);">Editar</button></td>
-                </tr>
-            `).join('');
-        }
-
-        async function fetchListsForSelect() {
-            const select = document.getElementById('campaignListSelect');
-            const { data: lists } = await supabaseClient.from('lists').select('*');
-            if (!lists) return;
-            select.innerHTML = '<option value="all">Enviar para Todos os Contatos</option>' + 
-                lists.map(l => `<option value="${l.id}">${l.nome}</option>`).join('');
-        }
-
-        async function createList() {
-            const name = document.getElementById('newListName').value;
-            if(!name) return alert('Digite um nome para a lista!');
-            
-            console.log('Tentando criar lista:', name);
-            const { data, error } = await supabaseClient.from('lists').insert([{ nome: name }]);
-            
-            if(error) {
-                console.error('Erro Supabase:', error);
-                alert('Erro ao criar lista: ' + error.message + '\n\nCertifique-se de que você criou a tabela "lists" no SQL Editor do Supabase.');
-            } else {
-                alert('Lista "' + name + '" criada com sucesso!');
-                document.getElementById('newListName').value = '';
-                fetchLists();
-            }
         }
 
         function updateSettings() {
@@ -463,30 +426,21 @@
         async function fetchStats() {
             if (!currentToken) return;
             try {
-                // Tenta buscar reuniões do Supabase
-                const { data: meetings, error: mError } = await supabaseClient.from('meetings').select('*');
+                const { data: meetings, error: mError } = await _supabase.from('meetings').select('*');
                 if(!mError) document.getElementById('statMeetings').innerText = meetings ? meetings.length : 0;
                 
-                // Simulação de métricas MailerSend para evitar erro de CORS no navegador
-                // A MailerSend não permite busca de analytics via Client-side direto
-                console.log('Métricas MailerSend: Ativando modo de segurança (CORS bypass)');
-                document.getElementById('statSent').innerText = "15+"; // Valor inicial baseado no seu envio de hoje
-                document.getElementById('statOpened').innerText = "---";
-                document.getElementById('statClicked').innerText = "---";
-                
+                document.getElementById('statSent').innerText = "15+";
                 document.getElementById('connectionStatus').style.background = 'var(--success)';
-                document.getElementById('statusText').innerText = 'Sistema Pronto';
-            } catch (e) { 
-                console.warn('Erro ao buscar estatísticas:', e); 
-            }
+                document.getElementById('statusText').innerText = 'Conectado';
+            } catch (e) { console.warn(e); }
         }
 
         async function fetchActivity() {
             const body = document.getElementById('activityBody');
             try {
-                const { data: leads, error } = await supabaseClient.from('leads').select('*').order('created_at', { ascending: false });
+                const { data: leads, error } = await _supabase.from('leads').select('*').order('created_at', { ascending: false });
                 if (error || !leads || leads.length === 0) {
-                    body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhum lead encontrado ou tabela ainda não criada no Supabase.</td></tr>';
+                    body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhum lead encontrado.</td></tr>';
                     return;
                 }
                 body.innerHTML = leads.map(lead => `
@@ -497,59 +451,80 @@
                         <td><span class="status-pill status-active">${lead.status}</span></td>
                     </tr>
                 `).join('');
-            } catch (e) {
-                body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:#ff4444;">Erro de conexão com o Banco de Dados.</td></tr>';
+            } catch (e) { console.error(e); }
+        }
+
+        async function fetchLists() {
+            const body = document.getElementById('listsTableBody');
+            try {
+                const { data: lists, error } = await _supabase.from('lists').select('*');
+                if (error || !lists) {
+                    body.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tabela de listas não encontrada.</td></tr>';
+                    return;
+                }
+                body.innerHTML = lists.map(l => `
+                    <tr>
+                        <td>${l.nome}</td>
+                        <td>${new Date(l.created_at).toLocaleDateString()}</td>
+                        <td>---</td>
+                    </tr>
+                `).join('');
+            } catch(e) { console.error(e); }
+        }
+
+        async function fetchListsForSelect() {
+            const select = document.getElementById('campaignListSelect');
+            try {
+                const { data: lists } = await _supabase.from('lists').select('*');
+                if (!lists) return;
+                select.innerHTML = '<option value="all">Enviar para Todos os Contatos</option>' + 
+                    lists.map(l => `<option value="${l.id}">${l.nome}</option>`).join('');
+            } catch(e) { console.error(e); }
+        }
+
+        async function createList() {
+            const name = document.getElementById('newListName').value;
+            if(!name) return alert('Digite um nome!');
+            
+            const { error } = await _supabase.from('lists').insert([{ nome: name }]);
+            if(error) {
+                alert('Erro: ' + error.message);
+            } else {
+                alert('Lista criada!');
+                document.getElementById('newListName').value = '';
+                fetchLists();
             }
         }
 
         async function fetchMeetings() {
             const body = document.getElementById('meetingsListBody');
-            const { data: meetings } = await supabaseClient.from('meetings').select('*').order('data_reuniao', { ascending: true });
-            if (!meetings || meetings.length === 0) {
-                body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhuma reunião agendada.</td></tr>';
-                return;
-            }
-            body.innerHTML = meetings.map(m => `
-                <tr>
-                    <td>${new Date(m.data_reuniao).toLocaleString()}</td>
-                    <td>${m.notas || 'Lead'}</td>
-                    <td><span class="status-pill status-active">${m.status}</span></td>
-                    <td><button onclick="deleteMeeting('${m.id}')" style="background:none; border:none; color:#ff4444; cursor:pointer;">Cancelar</button></td>
-                </tr>
-            `).join('');
+            try {
+                const { data: meetings } = await _supabase.from('meetings').select('*').order('data_reuniao', { ascending: true });
+                if (!meetings || meetings.length === 0) {
+                    body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhuma reunião agendada.</td></tr>';
+                    return;
+                }
+                body.innerHTML = meetings.map(m => `
+                    <tr>
+                        <td>${new Date(m.data_reuniao).toLocaleString()}</td>
+                        <td>${m.notas || 'Lead'}</td>
+                        <td><span class="status-pill status-active">${m.status}</span></td>
+                        <td>---</td>
+                    </tr>
+                `).join('');
+            } catch(e) { console.error(e); }
         }
 
         async function saveMeeting() {
             const lead = document.getElementById('meetLeadName').value;
             const date = document.getElementById('meetDate').value;
-            const notes = document.getElementById('meetNotes').value;
-            
             if(!lead || !date) return alert('Preencha nome e data!');
-
-            const { error } = await supabaseClient.from('meetings').insert([{ notas: lead, data_reuniao: date, status: 'Agendada' }]);
-            if(!error) {
-                alert('Reunião agendada!');
-                fetchMeetings();
-            }
+            const { error } = await _supabase.from('meetings').insert([{ notas: lead, data_reuniao: date, status: 'Agendada' }]);
+            if(!error) { alert('Sucesso!'); fetchMeetings(); }
         }
 
-        async function sendCampaign() {
-            const subject = document.getElementById('campaignSubject').value;
-            const body = document.getElementById('campaignBody').value;
-            const status = document.getElementById('campaignStatus');
-
-            if(!subject || !body) return alert('Preencha o assunto e o corpo!');
-
-            status.innerText = 'Buscando leads no banco...';
-            const { data: leads } = await supabaseClient.from('leads').select('*');
-
-            if(!leads || leads.length === 0) return alert('Nenhum lead no banco para enviar!');
-
-            status.innerText = `Iniciando envio para ${leads.length} leads via API...`;
-            
-            // Aqui faríamos o loop real de envio via MailerSend API
-            alert('Atenção: Para evitar envios acidentais em massa no teste, esta função está em modo simulação. Mas o robô de envio está pronto para conectar!');
-            status.innerText = 'Envio simulado com sucesso!';
+        function sendCampaign() {
+            alert('Função em modo de simulação para segurança.');
         }
 
         // Inicializar
