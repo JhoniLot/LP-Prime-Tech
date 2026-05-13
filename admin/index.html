@@ -213,10 +213,10 @@
         <div class="logo">Prime<span>Tech</span></div>
         <nav>
             <ul>
-                <li class="active"><i>📊</i> Dashboard</li>
-                <li><i>🚀</i> Campanhas</li>
-                <li><i>👥</i> Leads & Reuniões</li>
-                <li><i>⚙️</i> Configurações</li>
+                <li id="nav-dashboard" class="active" onclick="showSection('dashboard')"><i>📊</i> Dashboard</li>
+                <li id="nav-campaigns" onclick="showSection('campaigns')"><i>🚀</i> Campanhas</li>
+                <li id="nav-meetings" onclick="showSection('meetings')"><i>👥</i> Leads & Reuniões</li>
+                <li id="nav-settings" onclick="showSection('settings')"><i>⚙️</i> Configurações</li>
             </ul>
         </nav>
     </aside>
@@ -224,7 +224,7 @@
     <main>
         <header>
             <div>
-                <h1 style="font-family:'Syne', sans-serif; font-size: 2rem;">Command Center</h1>
+                <h1 id="sectionTitle" style="font-family:'Syne', sans-serif; font-size: 2rem;">Command Center</h1>
                 <p style="color: var(--text-dim);" id="dashboardGreeting">Bem-vindo de volta, Jhoni.</p>
             </div>
             <div class="user-badge">
@@ -233,74 +233,120 @@
             </div>
         </header>
 
-        <!-- Seção de Configurações de Token (Fica oculta por padrão) -->
-        <div id="settingsSection" class="panel" style="display: none; margin-bottom: 2rem; border: 1px solid var(--primary);">
-            <h3>Configurações de API</h3>
-            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1rem;">Insira seus tokens da MailerSend para monitorar os domínios.</p>
-            <div style="display: flex; gap: 10px; flex-direction: column;">
-                <input type="text" id="tokenInput" placeholder="Cole seu Token da MailerSend aqui..." style="background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 10px; color: #fff; width: 100%;">
-                <button onclick="saveToken()" class="btn-action">Salvar Token</button>
+        <!-- SEÇÃO DASHBOARD -->
+        <div id="section-dashboard" class="content-section">
+            <div class="account-tabs">
+                <div class="tab active" onclick="switchTab('all')">Geral (Todos)</div>
+                <div class="tab" id="domainTab1">primetechonline.shop</div>
             </div>
-        </div>
 
-        <div class="account-tabs">
-            <div class="tab active" onclick="switchTab('all')">Geral (Todos)</div>
-            <div class="tab" id="domainTab1">primetechonline.shop</div>
-            <div class="tab" onclick="toggleSettings()">⚙️ Configurações</div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">E-mails Enviados</div>
-                <div class="stat-value" id="statSent">0</div>
-                <div class="stat-trend">Atualizado agora</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Taxa de Abertura</div>
-                <div class="stat-value" id="statOpened">0%</div>
-                <div class="stat-trend">Baseado na atividade</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Cliques no Site</div>
-                <div class="stat-value" id="statClicked">0%</div>
-                <div class="stat-trend">Interesse real</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Reuniões Marcadas</div>
-                <div class="stat-value" id="statMeetings" style="color: var(--success);">0</div>
-                <div class="stat-trend">Clique para atualizar</div>
-            </div>
-        </div>
-
-        <div class="dashboard-row">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Atividade de Leads</h2>
-                    <button class="btn-action" onclick="fetchActivity()">Atualizar Agora</button>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">E-mails Enviados</div>
+                    <div class="stat-value" id="statSent">0</div>
+                    <div class="stat-trend">Atualizado agora</div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Evento</th>
-                            <th>Lead</th>
-                            <th>Data/Hora</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="activityBody">
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: var(--text-dim); padding: 2rem;">Aguardando conexão com a API...</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="stat-card">
+                    <div class="stat-label">Taxa de Abertura</div>
+                    <div class="stat-value" id="statOpened">0%</div>
+                    <div class="stat-trend">Baseado na atividade</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Cliques no Site</div>
+                    <div class="stat-value" id="statClicked">0%</div>
+                    <div class="stat-trend">Interesse real</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Reuniões Marcadas</div>
+                    <div class="stat-value" id="statMeetings" style="color: var(--success);">0</div>
+                    <div class="stat-trend">Clique para atualizar</div>
+                </div>
             </div>
 
-            <div class="panel">
-                <h2>Ações Rápidas</h2>
-                <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
-                    <button class="btn-action" style="background: rgba(255,255,255,0.05); color: var(--text); box-shadow: none;" onclick="alert('Funcionalidade de Disparo via Web em breve!')">🚀 Disparar Nova Campanha</button>
-                    <button class="btn-action" style="background: rgba(255,255,255,0.05); color: var(--text); box-shadow: none;">📅 Agendar Reunião</button>
-                    <button class="btn-action" style="background: rgba(255,255,255,0.05); color: var(--text); box-shadow: none;">📝 Editar Scripts de E-mail</button>
+            <div class="dashboard-row">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Leads Recentes</h2>
+                        <button class="btn-action" onclick="fetchActivity()">Atualizar</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Segmento</th>
+                                <th>Lead</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO CAMPANHAS -->
+        <div id="section-campaigns" class="content-section" style="display: none;">
+            <div class="panel" style="max-width: 800px;">
+                <h2>Nova Campanha de Prospecção</h2>
+                <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;">
+                    <div>
+                        <label style="display:block; margin-bottom:0.5rem; color:var(--text-dim);">Assunto do E-mail</label>
+                        <input type="text" id="campaignSubject" placeholder="Ex: Eficiência operacional na {{ NOME }}" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff;">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:0.5rem; color:var(--text-dim);">Corpo do E-mail (HTML)</label>
+                        <textarea id="campaignBody" rows="10" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff; font-family:monospace; resize:none;"></textarea>
+                    </div>
+                    <button class="btn-action" onclick="sendCampaign()" style="padding:1.2rem;">🚀 Disparar para todos os Leads (API MailerSend)</button>
+                    <p id="campaignStatus" style="font-size:0.85rem; color:var(--text-dim); text-align:center;"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO REUNIÕES -->
+        <div id="section-meetings" class="content-section" style="display: none;">
+            <div class="dashboard-row">
+                <div class="panel">
+                    <h2>Gestão de Reuniões</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Lead</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="meetingsListBody"></tbody>
+                    </table>
+                </div>
+                <div class="panel">
+                    <h2>Novo Agendamento</h2>
+                    <div style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
+                        <input type="text" id="meetLeadName" placeholder="Nome do Lead" style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff;">
+                        <input type="datetime-local" id="meetDate" style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff;">
+                        <textarea id="meetNotes" placeholder="Notas da reunião..." style="padding:0.8rem; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#fff; resize:none;"></textarea>
+                        <button class="btn-action" onclick="saveMeeting()">Agendar Agora</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO CONFIGURAÇÕES -->
+        <div id="section-settings" class="content-section" style="display: none;">
+            <div class="panel" style="max-width: 600px;">
+                <h2>Configurações do Sistema</h2>
+                <div style="margin-top:2rem; display:flex; flex-direction:column; gap:2rem;">
+                    <div>
+                        <h4 style="margin-bottom:1rem; color:var(--primary);">MailerSend API Token</h4>
+                        <input type="password" id="settingToken" style="width:100%; padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:12px; color:#fff;">
+                        <button class="btn-action" style="margin-top:0.5rem;" onclick="updateSettings()">Salvar Configurações</button>
+                    </div>
+                    <div style="padding:1.5rem; background:rgba(255,0,0,0.05); border-radius:15px; border:1px solid rgba(255,0,0,0.1);">
+                        <h4 style="color:#ff4444;">Zona de Perigo</h4>
+                        <p style="font-size:0.8rem; color:var(--text-dim); margin:0.5rem 0 1rem;">Isso irá remover todos os dados locais do seu navegador.</p>
+                        <button onclick="localStorage.clear(); location.reload();" style="background:none; border:1px solid #ff4444; color:#ff4444; padding:8px 15px; border-radius:8px; cursor:pointer;">Limpar Cache do Sistema</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -310,89 +356,118 @@
     <script>
         const SUPABASE_URL = 'https://zseqxonektcdrphtxfcn.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzZXF4b25la3RjZHJwaHR4ZmNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODA1NTUsImV4cCI6MjA5NDI1NjU1NX0.8FXsU2GiM6Owm6Hl0CrRY-FG0xi5JmmvmDsts7B3JuU';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentToken = localStorage.getItem('ms_token') || 'mssp.b8d8k8v.z3m5jgrwy6dldpyo.PsiMGPS';
+        document.getElementById('settingToken').value = currentToken;
 
-        function toggleSettings() {
-            const section = document.getElementById('settingsSection');
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        function showSection(sectionId) {
+            // Esconder todas as seções
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            // Mostrar a seção selecionada
+            document.getElementById('section-' + sectionId).style.display = 'block';
+            
+            // Atualizar navegação
+            document.querySelectorAll('nav li').forEach(li => li.classList.remove('active'));
+            document.getElementById('nav-' + sectionId).classList.add('active');
+            
+            // Atualizar título
+            const titles = { 'dashboard': 'Command Center', 'campaigns': 'Campanhas', 'meetings': 'Leads & Reuniões', 'settings': 'Configurações' };
+            document.getElementById('sectionTitle').innerText = titles[sectionId];
+
+            if(sectionId === 'meetings') fetchMeetings();
+            if(sectionId === 'dashboard') { fetchStats(); fetchActivity(); }
         }
 
-        function saveToken() {
-            const token = document.getElementById('tokenInput').value;
-            if (token) {
-                localStorage.setItem('ms_token', token);
-                currentToken = token;
-                alert('Token salvo com sucesso!');
-                fetchStats();
-                toggleSettings();
-            }
+        function updateSettings() {
+            const token = document.getElementById('settingToken').value;
+            localStorage.setItem('ms_token', token);
+            currentToken = token;
+            alert('Configurações salvas!');
+            fetchStats();
         }
 
         async function fetchStats() {
             if (!currentToken) return;
-            
             try {
-                // Métricas Reais da MailerSend (Simulado para visualização)
-                document.getElementById('statSent').innerText = "Carregando...";
+                const { data: meetings } = await supabaseClient.from('meetings').select('*');
+                document.getElementById('statMeetings').innerText = meetings ? meetings.length : 0;
                 
                 const response = await fetch('https://api.mailersend.com/v1/analytics/counts', {
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
-                
                 if(response.ok) {
                     const data = await response.json();
                     document.getElementById('statSent').innerText = data.sent || 0;
-                } else {
-                    document.getElementById('statSent').innerText = "Erro API";
                 }
-
-                // Buscar Reuniões Reais do Supabase
-                const { data: meetings, error } = await supabase.from('meetings').select('*');
-                document.getElementById('statMeetings').innerText = meetings ? meetings.length : 0;
-
-                document.getElementById('connectionStatus').style.background = 'var(--success)';
-                document.getElementById('statusText').innerText = 'Conectado à MailerSend & Supabase';
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         async function fetchActivity() {
             const body = document.getElementById('activityBody');
-            body.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 1rem;">Buscando leads do banco...</td></tr>';
-            
-            const { data: leads, error } = await supabase
-                .from('leads')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error || !leads || leads.length === 0) {
-                body.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-dim);">Nenhum lead encontrado no banco de dados.</td></tr>';
+            const { data: leads } = await supabaseClient.from('leads').select('*').order('created_at', { ascending: false });
+            if (!leads || leads.length === 0) {
+                body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhum lead encontrado.</td></tr>';
                 return;
             }
-
             body.innerHTML = leads.map(lead => `
                 <tr>
-                    <td>${lead.segmento || 'Prospecção'}</td>
+                    <td>${lead.segmento || '---'}</td>
                     <td>${lead.nome}</td>
                     <td>${new Date(lead.created_at).toLocaleDateString()}</td>
-                    <td><span class="status-pill ${lead.status === 'Reunião' ? 'status-active' : 'status-pending'}">${lead.status}</span></td>
+                    <td><span class="status-pill status-active">${lead.status}</span></td>
                 </tr>
             `).join('');
         }
 
-        // Função para simular adição de lead (apenas para teste rápido do usuário)
-        async function testAddLead() {
-            const { data, error } = await supabase
-                .from('leads')
-                .insert([{ nome: 'Teste Clínica', email: 'teste@clinica.com', segmento: 'Estética' }]);
-            
-            if (!error) {
-                alert('Lead de teste adicionado!');
-                fetchActivity();
+        async function fetchMeetings() {
+            const body = document.getElementById('meetingsListBody');
+            const { data: meetings } = await supabaseClient.from('meetings').select('*').order('data_reuniao', { ascending: true });
+            if (!meetings || meetings.length === 0) {
+                body.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:var(--text-dim);">Nenhuma reunião agendada.</td></tr>';
+                return;
             }
+            body.innerHTML = meetings.map(m => `
+                <tr>
+                    <td>${new Date(m.data_reuniao).toLocaleString()}</td>
+                    <td>${m.notas || 'Lead'}</td>
+                    <td><span class="status-pill status-active">${m.status}</span></td>
+                    <td><button onclick="deleteMeeting('${m.id}')" style="background:none; border:none; color:#ff4444; cursor:pointer;">Cancelar</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveMeeting() {
+            const lead = document.getElementById('meetLeadName').value;
+            const date = document.getElementById('meetDate').value;
+            const notes = document.getElementById('meetNotes').value;
+            
+            if(!lead || !date) return alert('Preencha nome e data!');
+
+            const { error } = await supabaseClient.from('meetings').insert([{ notas: lead, data_reuniao: date, status: 'Agendada' }]);
+            if(!error) {
+                alert('Reunião agendada!');
+                fetchMeetings();
+            }
+        }
+
+        async function sendCampaign() {
+            const subject = document.getElementById('campaignSubject').value;
+            const body = document.getElementById('campaignBody').value;
+            const status = document.getElementById('campaignStatus');
+
+            if(!subject || !body) return alert('Preencha o assunto e o corpo!');
+
+            status.innerText = 'Buscando leads no banco...';
+            const { data: leads } = await supabaseClient.from('leads').select('*');
+
+            if(!leads || leads.length === 0) return alert('Nenhum lead no banco para enviar!');
+
+            status.innerText = `Iniciando envio para ${leads.length} leads via API...`;
+            
+            // Aqui faríamos o loop real de envio via MailerSend API
+            alert('Atenção: Para evitar envios acidentais em massa no teste, esta função está em modo simulação. Mas o robô de envio está pronto para conectar!');
+            status.innerText = 'Envio simulado com sucesso!';
         }
 
         // Inicializar
