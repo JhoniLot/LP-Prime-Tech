@@ -219,18 +219,30 @@
                 </div>
 
                 <div class="panel">
-                    <h2>Importar Leads (CSV)</h2>
-                    <div style="display:flex; flex-direction:column; gap:1.5rem; margin-top:1.5rem;">
+                    <h2>Importar Leads</h2>
+                    <div style="display:flex; gap:10px; margin-top:1rem; margin-bottom:1.5rem;">
+                        <button class="tab active" id="btn-file" onclick="toggleImportMode('file')" style="flex:1;">📁 Upload CSV</button>
+                        <button class="tab" id="btn-paste" onclick="toggleImportMode('paste')" style="flex:1;">📝 Colar Texto</button>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:1.2rem;">
                         <div>
-                            <label>1. Escolha a Lista Destino</label>
+                            <label>1. Lista de Destino</label>
                             <select id="importListSelect"></select>
                         </div>
-                        <div>
+
+                        <div id="import-file-zone">
                             <label>2. Upload do Arquivo CSV</label>
                             <input type="file" id="csvFileInput" accept=".csv">
                         </div>
+
+                        <div id="import-paste-zone" style="display:none;">
+                            <label>2. Cole os dados (email, nome, segmento)</label>
+                            <textarea id="pasteInput" rows="8" placeholder="exemplo@email.com, João, Estética&#10;maria@clinica.com, Maria, Botox" style="font-family:monospace; font-size:0.8rem;"></textarea>
+                        </div>
+
                         <button class="btn-action" onclick="importLeads()" id="importBtn">📤 Iniciar Importação</button>
-                        <p id="importStatus" style="font-size:0.8rem; color:var(--text-dim);"></p>
+                        <p id="importStatus" style="font-size:0.8rem; color:var(--text-dim); text-align:center;"></p>
                     </div>
                 </div>
             </div>
@@ -300,33 +312,67 @@
             fetchLists();
         }
 
+        let importMode = 'file';
+        function toggleImportMode(mode) {
+            importMode = mode;
+            document.getElementById('import-file-zone').style.display = mode === 'file' ? 'block' : 'none';
+            document.getElementById('import-paste-zone').style.display = mode === 'paste' ? 'block' : 'none';
+            document.getElementById('btn-file').classList.toggle('active', mode === 'file');
+            document.getElementById('btn-paste').classList.toggle('active', mode === 'paste');
+        }
+
         async function importLeads() {
             const listId = document.getElementById('importListSelect').value;
-            const fileInput = document.getElementById('csvFileInput');
-            if(!listId || !fileInput.files.length) return alert('Selecione lista e arquivo!');
+            const status = document.getElementById('importStatus');
+            if(!listId) return alert('Selecione uma lista!');
 
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const lines = e.target.result.split('\n');
-                const leads = [];
-                for(let i = 1; i < lines.length; i++) {
-                    const cols = lines[i].split(',');
-                    if(cols.length >= 2 && cols[0].includes('@')) {
-                        leads.push({
-                            email: cols[0].trim(),
-                            nome: cols[1].trim(),
-                            segmento: cols[2] ? cols[2].trim() : 'Geral',
-                            list_id: listId,
-                            status: 'Pendente'
-                        });
-                    }
-                }
-                const { error } = await _supabase.from('leads').upsert(leads, { onConflict: 'email' });
-                alert(error ? 'Erro: ' + error.message : `Sucesso! ${leads.length} leads importados.`);
+            let leads = [];
+
+            if(importMode === 'file') {
+                const fileInput = document.getElementById('csvFileInput');
+                if(!fileInput.files.length) return alert('Selecione o arquivo!');
+                const text = await fileInput.files[0].text();
+                leads = parseLeads(text);
+            } else {
+                const text = document.getElementById('pasteInput').value;
+                if(!text) return alert('Cole os dados no campo!');
+                leads = parseLeads(text);
+            }
+
+            if(leads.length === 0) return alert('Nenhum lead válido encontrado!');
+
+            status.innerText = 'Enviando para o banco...';
+            const { error } = await _supabase.from('leads').upsert(leads, { onConflict: 'email' });
+            
+            if(error) {
+                alert('Erro: ' + error.message);
+            } else {
+                alert(`Sucesso! ${leads.length} leads importados.`);
+                document.getElementById('pasteInput').value = '';
+                fetchStats();
                 fetchActivity();
-            };
-            reader.readAsText(file);
+            }
+            status.innerText = '';
+        }
+
+        function parseLeads(text) {
+            const lines = text.split('\n');
+            const leads = [];
+            const listId = document.getElementById('importListSelect').value;
+
+            lines.forEach(line => {
+                const cols = line.split(',');
+                if(cols.length >= 1 && cols[0].includes('@')) {
+                    leads.push({
+                        email: cols[0].trim(),
+                        nome: cols[1] ? cols[1].trim() : 'Lead',
+                        segmento: cols[2] ? cols[2].trim() : 'Geral',
+                        list_id: listId,
+                        status: 'Pendente'
+                    });
+                }
+            });
+            return leads;
         }
 
         async function fetchStats() {
