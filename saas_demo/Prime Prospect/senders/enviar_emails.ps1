@@ -65,14 +65,21 @@ foreach ($lead in $leads) {
     } | ConvertTo-Json -Depth 10 -Compress
 
     try {
+        $apiHeaders = @{ 
+            "Authorization" = "Bearer $MAILERSEND_TOKEN"
+            "Content-Type" = "application/json"
+            "X-Requested-With" = "XMLHttpRequest"
+        }
+        
         Invoke-WebRequest -Uri "https://api.mailersend.com/v1/email" `
             -Method Post `
-            -Headers @{ "Authorization" = "Bearer $MAILERSEND_TOKEN"; "Content-Type" = "application/json" } `
+            -Headers $apiHeaders `
             -Body ([System.Text.Encoding]::UTF8.GetBytes($mailBody))
         
         Write-Host "Sucesso: $email" -ForegroundColor Green
     } catch {
         Write-Host "Erro em $($email): $_" -ForegroundColor Red
+        Write-Host "DICA: Verifique se o seu Token na MailerSend está ativo e se o domínio primetechonline.shop está verificado lá!" -ForegroundColor Gray
     }
     
     Start-Sleep -Seconds 1 # Delay anti-spam
