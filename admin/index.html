@@ -437,10 +437,16 @@
 
         async function createList() {
             const name = document.getElementById('newListName').value;
-            if(!name) return;
-            const { error } = await supabaseClient.from('lists').insert([{ nome: name }]);
-            if(!error) {
-                alert('Lista criada!');
+            if(!name) return alert('Digite um nome para a lista!');
+            
+            console.log('Tentando criar lista:', name);
+            const { data, error } = await supabaseClient.from('lists').insert([{ nome: name }]);
+            
+            if(error) {
+                console.error('Erro Supabase:', error);
+                alert('Erro ao criar lista: ' + error.message + '\n\nCertifique-se de que você criou a tabela "lists" no SQL Editor do Supabase.');
+            } else {
+                alert('Lista "' + name + '" criada com sucesso!');
                 document.getElementById('newListName').value = '';
                 fetchLists();
             }
