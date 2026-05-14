@@ -12,9 +12,7 @@ $headers = @{ "apikey" = $SUPABASE_KEY; "Authorization" = "Bearer $SUPABASE_KEY"
 try {
     $settings = Invoke-RestMethod -Uri "$SUPABASE_URL/rest/v1/settings?id=eq.mailersend_token&select=value" -Method Get -Headers $headers
     $MAILERSEND_TOKEN = $settings[0].value
-    if (!$MAILERSEND_TOKEN) { throw "Token não encontrado no banco." }
 } catch {
-    Write-Host "Aviso: Token não encontrado no banco. Usando valor padrão." -ForegroundColor Gray
     $MAILERSEND_TOKEN = "mlsn.10343a487aa88400078d886c85e208f67172609bda003130151a45717805213d"
 }
 
@@ -38,9 +36,6 @@ $assunto = $camp.assunto
 $mensagem = $camp.mensagem
 $listId = $camp.list_id
 
-Write-Host "`nCampanha Encontrada!" -ForegroundColor Green
-Write-Host "Assunto: $assunto"
-
 # 3. Buscar Leads
 Write-Host "Buscando leads da lista..." -ForegroundColor Yellow
 $leadsUrl = "$SUPABASE_URL/rest/v1/leads?list_id=eq.$listId&select=*"
@@ -56,8 +51,14 @@ if ($confirm -ne "S") { return }
 
 # 4. Disparar
 foreach ($lead in $leads) {
-    $email = $lead.email
-    $nome = $lead.nome
+    $email = if ($lead.email) { $lead.email.Trim() } else { "" }
+    $nome = if ($lead.nome) { $lead.nome.Trim() } else { "Lead" }
+    
+    if (-not $email -or -not ($email -like "*@*.*")) {
+        Write-Host "Pulando lead com e-mail inválido: '$email'" -ForegroundColor Gray
+        continue
+    }
+
     Write-Host "Enviando para: $email..." -ForegroundColor White
     
     $finalSubject = $assunto.Replace("{{ NOME }}", $nome)
@@ -82,15 +83,17 @@ foreach ($lead in $leads) {
             -Body ([System.Text.Encoding]::UTF8.GetBytes($mailBody))
         Write-Host "Sucesso: $email" -ForegroundColor Green
     } catch {
-        $errorMessage = $_.Exception.Message
         if ($_.Exception.Response) {
             $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
             $responseBody = $reader.ReadToEnd()
+            if ($responseBody -like "*unique recipients limit*") {
+                Write-Host "LIMITE ATINGIDO: Sua conta MailerSend ainda está em modo 'Trial'. Verifique seu domínio no painel da MailerSend para liberar." -ForegroundColor Yellow
+                return 
+            }
             Write-Host "ERRO DA MAILERSEND: $responseBody" -ForegroundColor Red
         } else {
-            Write-Host "Erro de Conexão: $errorMessage" -ForegroundColor Red
+            Write-Host "Erro de Conexão: $($_.Exception.Message)" -ForegroundColor Red
         }
-        Write-Host "DICA: Verifique se o domínio primetechonline.shop está verificado e com status 'Active' no MailerSend." -ForegroundColor Gray
     }
     Start-Sleep -Seconds 1
 }
