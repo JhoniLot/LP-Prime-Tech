@@ -82,7 +82,15 @@ foreach ($lead in $leads) {
             -Body ([System.Text.Encoding]::UTF8.GetBytes($mailBody))
         Write-Host "Sucesso: $email" -ForegroundColor Green
     } catch {
-        Write-Host "Erro em $($email): $_" -ForegroundColor Red
+        $errorMessage = $_.Exception.Message
+        if ($_.Exception.Response) {
+            $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+            $responseBody = $reader.ReadToEnd()
+            Write-Host "ERRO DA MAILERSEND: $responseBody" -ForegroundColor Red
+        } else {
+            Write-Host "Erro de Conexão: $errorMessage" -ForegroundColor Red
+        }
+        Write-Host "DICA: Verifique se o domínio primetechonline.shop está verificado e com status 'Active' no MailerSend." -ForegroundColor Gray
     }
     Start-Sleep -Seconds 1
 }
